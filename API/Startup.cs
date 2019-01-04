@@ -88,18 +88,6 @@ namespace API
             var identityOptions = new Infrastructure.Identity.IdentityOptions();
             Configuration.GetSection(nameof(Infrastructure.Identity.IdentityOptions)).Bind(identityOptions);
 
-            services.AddIdentity<User, Role>(options =>
-                {
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequiredLength = 6;
-                    options.User.RequireUniqueEmail = true;
-                })
-                .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders();
-
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {

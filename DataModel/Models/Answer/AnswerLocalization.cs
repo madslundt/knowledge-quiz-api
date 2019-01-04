@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataModel.Models
+namespace DataModel.Models.Answer
 {
     public class AnswerLocalization
     {
@@ -10,7 +10,7 @@ namespace DataModel.Models
         public Answer Answer { get; set; }
 
         public Guid LocalizationId { get; set; }
-        public Localization Localization { get; set; }
+        public Localization.Localization Localization { get; set; }
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
     }

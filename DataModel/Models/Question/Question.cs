@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataModel.Models
+namespace DataModel.Models.Question
 {
     public class Question
     {
@@ -9,10 +9,10 @@ namespace DataModel.Models
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime Updated { get; set; }
-
-        public QuestionLocalization QuestionLocalization { get; set; }
+        
         public string ImageUrl { get; set; }
 
-        public ICollection<Answer> Answers { get; set; }
+        public ICollection<QuestionLocalization> QuestionTranslations { get; set; }
+        public ICollection<Answer.Answer> Answers { get; set; }
     }
 }
