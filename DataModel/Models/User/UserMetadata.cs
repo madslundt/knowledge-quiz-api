@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataModel.Models.User
 {
@@ -8,18 +6,10 @@ namespace DataModel.Models.User
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Brand { get; set; }
-        public string BuildNumber { get; set; }
-        public string DeviceCountry { get; set; }
-        public string DeviceId { get; set; }
-        public string DeviceLocale { get; set; }
-        public string DeviceName { get; set; }
-        public string Manufacturer { get; set; }
-        public string SystemName { get; set; }
-        public string SystemVersion { get; set; }
-        public string Timezone { get; set; }
-        public string UniqueId { get; set; }
-        public string Version { get; set; }
+        public UserMetadataTypeReference MetadataTypeReference { get; set; }
+        public UserMetadataType MetadataType { get; set; }
+
+        public string Value { get; set; }
 
         public DateTime Created { get; set; }
 

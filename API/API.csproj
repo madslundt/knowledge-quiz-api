@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Features\" />
     <Folder Include="Infrastructure\Middleware\" />
     <Folder Include="Infrastructure\Registry\" />
     <Folder Include="ThirdParty\" />
