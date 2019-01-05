@@ -22,7 +22,7 @@ namespace DataModel.Models.User
                 b.HasAlternateKey(k => new { k.UserId, k.MetadataType });
 
                 b.HasOne(r => r.MetadataTypeReference)
-                    .WithMany(r => r.UserMetadata)
+                    .WithMany()
                     .HasForeignKey(fk => fk.MetadataType)
                     .IsRequired();
 

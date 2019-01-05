@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using API.Features.Answer;
 using DataModel;
 using DataModel.Models.User;
 using FluentValidation;
@@ -54,19 +53,17 @@ namespace API.Features.User
         public class AddAnswerHandler : IRequestHandler<Command>
         {
             private readonly DatabaseContext _db;
-            private readonly IMediator _mediator;
 
-            public AddAnswerHandler(DatabaseContext db, IMediator mediator)
+            public AddAnswerHandler(DatabaseContext db)
             {
                 _db = db;
-                _mediator = mediator;
             }
 
             public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
-                var isUserExist = await IsUserExist(message.UserId);
+                var doesUserExist = await DoesUserExist(message.UserId);
 
-                if (!isUserExist)
+                if (!doesUserExist)
                 {
                     throw new ArgumentNullException($"Could not find {nameof(message.UserId)} '{message.UserId}'");
                 }
@@ -99,7 +96,7 @@ namespace API.Features.User
                 return result;
             }
 
-            private async Task<bool> IsUserExist(Guid userId)
+            private async Task<bool> DoesUserExist(Guid userId)
             {
                 var query = from user in _db.Users
                     where user.Id == userId

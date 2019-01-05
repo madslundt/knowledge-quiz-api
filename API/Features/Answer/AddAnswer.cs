@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using API.Features.Answer;
 using DataModel;
 using DataModel.Models.User;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Question
 {
@@ -30,22 +31,17 @@ namespace API.Features.Question
         public class AddAnswerHandler : IRequestHandler<Command>
         {
             private readonly DatabaseContext _db;
-            private readonly IMediator _mediator;
 
-            public AddAnswerHandler(DatabaseContext db, IMediator mediator)
+            public AddAnswerHandler(DatabaseContext db)
             {
                 _db = db;
-                _mediator = mediator;
             }
 
             public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
-                var answer = await _mediator.Send(new GetAnswers.Query
-                {
-                    AnswerId = message.AnswerId
-                });
+                var doesAnswerExist = await DoesAnswerExist(message.AnswerId);
 
-                if (answer is null)
+                if (!doesAnswerExist)
                 {
                     throw new ArgumentNullException($"Could not find {nameof(message.AnswerId)} '{message.AnswerId}'");
                 }
@@ -55,6 +51,17 @@ namespace API.Features.Question
                 await _db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                 return Unit.Value;
+            }
+
+            private async Task<bool> DoesAnswerExist(Guid answerId)
+            {
+                var query = from answer in _db.Answers
+                            where answer.Id == answerId
+                            select answer.Id;
+
+                var result = await query.AnyAsync();
+
+                return result;
             }
 
             private async Task AddAnswer(Guid answerId, Guid userId)

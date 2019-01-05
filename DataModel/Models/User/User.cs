@@ -7,7 +7,7 @@ namespace DataModel.Models.User
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string DeviceId { get; set; }
+        public string UniqueId { get; set; }
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
 

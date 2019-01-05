@@ -29,7 +29,7 @@ namespace DataModel.Models.Question
                     .IsRequired();
 
                 b.HasOne(r => r.QuestionTypeReference)
-                    .WithMany(r => r.QuestionLocalizations)
+                    .WithMany()
                     .HasForeignKey(fk => fk.QuestionType)
                     .IsRequired();
 

@@ -2,11 +2,11 @@
 
 namespace DataModel.Models.User
 {
-    public class UserContext
+    public class UserBlacklistContext
     {
         public static void Build(ModelBuilder builder)
         {
-            builder.Entity<User>(b =>
+            builder.Entity<UserBlacklist>(b =>
             {
                 b.Property(p => p.Id)
                     .ValueGeneratedOnAdd()
@@ -16,17 +16,13 @@ namespace DataModel.Models.User
                     .ValueGeneratedOnAdd()
                     .IsRequired();
 
-                b.HasIndex(i => i.UniqueId)
-                    .IsUnique();
-
-                b.HasAlternateKey(k => k.UniqueId);
-
-                b.HasOne(r => r.UserBlacklist)
-                    .WithOne(r => r.User)
-                    .HasForeignKey<UserBlacklist>(fk => fk.UserId);
+                b.HasOne(r => r.User)
+                    .WithOne(r => r.UserBlacklist)
+                    .HasForeignKey<UserBlacklist>(fk => fk.UserId)
+                    .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("Users");
+                b.ToTable("UserBlacklist");
             });
         }
     }

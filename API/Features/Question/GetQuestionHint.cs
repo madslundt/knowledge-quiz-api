@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using DataModel;
 using DataModel.Models;
-using DataModel.Models.Localization;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +15,7 @@ namespace API.Features.Question
     {
         public class Query : IRequest<Result>
         {
-            public Locale Locale { get; set; }
+            public DataModel.Models.Localization.Locale Locale { get; set; }
             public Guid QuestionId { get; set; }
         }
 
@@ -61,7 +59,7 @@ namespace API.Features.Question
                 return result;
             }
 
-            private async Task<string> GetHint(Guid questionId, Locale locale)
+            private async Task<string> GetHint(Guid questionId, DataModel.Models.Localization.Locale locale)
             {
                 var query = from questionLocalization in _db.QuestionLocalizations
                     join localization in _db.Localizations on questionLocalization.LocalizationId equals localization.Id
