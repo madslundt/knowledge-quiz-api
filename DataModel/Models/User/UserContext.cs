@@ -21,6 +21,10 @@ namespace DataModel.Models.User
 
                 b.HasAlternateKey(k => k.DeviceId);
 
+                b.HasOne(r => r.UserBlacklist)
+                    .WithOne(r => r.User)
+                    .HasForeignKey<UserBlacklist>(fk => fk.UserId);
+
                 b.HasKey(k => k.Id);
                 b.ToTable("Users");
             });
