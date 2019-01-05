@@ -1,4 +1,8 @@
 ﻿using DataModel.Models;
+using DataModel.Models.Answer;
+using DataModel.Models.Localization;
+using DataModel.Models.Question;
+using DataModel.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataModel
@@ -27,12 +31,39 @@ namespace DataModel
             : base(options)
         { }
 
-        
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserMetadata> UserMetadata { get; set; }
+        public DbSet<MetadataTypeReference> MetadataTypeReferences { get; set; }
+        public DbSet<UserAnswer> UserAnswers { get; set; }
+
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionLocalization> QuestionLocalizations { get; set; }
+        public DbSet<QuestionTypeReference> QuestionTypeReferences { get; set; }
+
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<AnswerLocalization> AnswerLocalizations { get; set; }
+
+        public DbSet<Localization> Localizations { get; set; }
+        public DbSet<LocaleReference> LocaleReferences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
+         
+            UserContext.Build(builder);
+            UserMetadataContext.Build(builder);
+            MetadataTypeReferenceContext.Build(builder);
+            UserAnswerContext.Build(builder);
+
+            QuestionContext.Build(builder);
+            QuestionLocalizationContext.Build(builder);
+            QuestionTypeReferenceContext.Build(builder);
+
+            AnswerContext.Build(builder);
+            AnswerLocalizationContext.Build(builder);
+
+            LocalizationContext.Build(builder);
+            LocaleReferenceContext.Build(builder);
         }
     }
 }

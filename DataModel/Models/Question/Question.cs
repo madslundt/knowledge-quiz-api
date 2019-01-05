@@ -12,7 +12,7 @@ namespace DataModel.Models.Question
         
         public string ImageUrl { get; set; }
 
-        public ICollection<QuestionLocalization> QuestionTranslations { get; set; }
+        public ICollection<QuestionLocalization> QuestionLocalizations { get; set; }
         public ICollection<Answer.Answer> Answers { get; set; }
     }
 }

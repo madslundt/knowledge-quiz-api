@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataModel.Models.User
 {
@@ -18,6 +15,11 @@ namespace DataModel.Models.User
                 b.Property(p => p.Created)
                     .ValueGeneratedOnAdd()
                     .IsRequired();
+
+                b.HasIndex(i => i.DeviceId)
+                    .IsUnique();
+
+                b.HasAlternateKey(k => k.DeviceId);
 
                 b.HasKey(k => k.Id);
                 b.ToTable("Users");

@@ -2,7 +2,7 @@
 
 namespace DataModel.Models.User
 {
-    public class UserMetadataTypeReference
+    public class MetadataTypeReference
     {
         public UserMetadataType Id { get; set; }
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace DataModel.Models.User
         DeviceId = 4,
         DeviceLocale = 5,
         DeviceName = 6,
-        MACAddress = 7,
+        MacAddress = 7,
         Manufacturer = 8,
         SystemName = 9,
         SystemVersion = 10,

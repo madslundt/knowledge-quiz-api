@@ -42,10 +42,6 @@ namespace IDP
 
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders();
-
             var builder = services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;
@@ -53,7 +49,6 @@ namespace IDP
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                 })
-                .AddAspNetIdentity<User>()
                 //.AddTestUsers(Config.GetTestUsers())                              // If using in-memory
                 .AddInMemoryApiResources(Config.GetApiResources()) // If using in-memory
                 .AddInMemoryClients(Config.GetClients()) // If using in-memory

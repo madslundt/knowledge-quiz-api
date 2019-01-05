@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Infrastructure\Middleware\" />
     <Folder Include="Infrastructure\Registry\" />
     <Folder Include="ThirdParty\" />

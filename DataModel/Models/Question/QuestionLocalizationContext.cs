@@ -16,19 +16,21 @@ namespace DataModel.Models.Question
                     .ValueGeneratedOnAdd()
                     .IsRequired();
 
-                b.Property(p => p.QuestionType)
-                    .IsRequired();
-
-                b.HasAlternateKey(k => new { k.QuestionId, k.QuestionType, k.TranslationId });
+                b.HasAlternateKey(k => new { k.QuestionId, k.LocalizationId, k.QuestionTypeReference });
 
                 b.HasOne(k => k.Question)
-                    .WithMany(k => k.QuestionTranslations)
+                    .WithMany(k => k.QuestionLocalizations)
                     .HasForeignKey(fk => fk.QuestionId)
                     .IsRequired();
 
                 b.HasOne(k => k.Localization)
                     .WithMany(k => k.QuestionLocalizations)
-                    .HasForeignKey(fk => fk.TranslationId)
+                    .HasForeignKey(fk => fk.LocalizationId)
+                    .IsRequired();
+
+                b.HasOne(r => r.QuestionTypeReference)
+                    .WithMany(r => r.QuestionLocalizations)
+                    .HasForeignKey(fk => fk.QuestionType)
                     .IsRequired();
 
                 b.HasKey(k => k.Id);

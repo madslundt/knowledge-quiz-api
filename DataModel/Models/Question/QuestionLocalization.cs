@@ -9,7 +9,7 @@ namespace DataModel.Models.Question
         public Guid QuestionId { get; set; }
         public Question Question { get; set; }
 
-        public Guid TranslationId { get; set; }
+        public Guid LocalizationId { get; set; }
         public Localization.Localization Localization { get; set; }
 
         public QuestionType QuestionType { get; set; }

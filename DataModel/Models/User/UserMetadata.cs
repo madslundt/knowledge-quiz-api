@@ -6,7 +6,7 @@ namespace DataModel.Models.User
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public UserMetadataTypeReference MetadataTypeReference { get; set; }
+        public MetadataTypeReference MetadataTypeReference { get; set; }
         public UserMetadataType MetadataType { get; set; }
 
         public string Value { get; set; }

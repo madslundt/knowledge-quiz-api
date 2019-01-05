@@ -20,13 +20,10 @@ namespace DataModel.Models.Localization
                     .ValueGeneratedOnUpdate()
                     .IsRequired();
 
-                b.Property(p => p.Key)
+                b.Property(p => p.Text)
                     .IsRequired();
 
-                b.Property(p => p.Value)
-                    .IsRequired();
-
-                b.HasAlternateKey(k => new { k.Key, k.Locale });
+                b.HasAlternateKey(k => new { Value = k.Text, k.Locale });
 
                 b.HasOne(r => r.LocaleReference)
                     .WithMany(r => r.Localizations)

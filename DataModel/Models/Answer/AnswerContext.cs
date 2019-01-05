@@ -20,6 +20,9 @@ namespace DataModel.Models.Answer
                     .ValueGeneratedOnUpdate()
                     .IsRequired();
 
+                b.Property(p => p.IsCorrect)
+                    .IsRequired();
+
                 b.HasOne(r => r.Question)
                     .WithMany(r => r.Answers)
                     .HasForeignKey(fk => fk.QuestionId)

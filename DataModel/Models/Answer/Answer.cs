@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataModel.Models.User;
 
 namespace DataModel.Models.Answer
 {
@@ -13,6 +14,9 @@ namespace DataModel.Models.Answer
         public Guid QuestionId { get; set; }
         public Question.Question Question { get; set; }
 
+        public bool IsCorrect { get; set; } = false;
+
         public ICollection<AnswerLocalization> AnswerLocalizations { get; set; }
+        public ICollection<UserAnswer> UserAnswers { get; set; }
     }
 }

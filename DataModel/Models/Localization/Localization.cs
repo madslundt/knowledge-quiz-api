@@ -9,9 +9,8 @@ namespace DataModel.Models.Localization
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime Updated { get; set; }
-
-        public string Key { get; set; }
-        public string Value { get; set; }
+        
+        public string Text { get; set; }
 
         public Locale Locale { get; set; }
         public LocaleReference LocaleReference { get; set; }
