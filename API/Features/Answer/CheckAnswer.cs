@@ -53,6 +53,11 @@ namespace API.Features.Answer
             {
                 var correctAnswers = await GetCorrectAnswers(message.AnswerId);
 
+                if (correctAnswers.Count == 0)
+                {
+                    throw new ValidationException($"No correct answers for {nameof(message.AnswerId)} '{message.AnswerId}'");
+                }
+
                 var text = await GetQuestionText(message.AnswerId, message.Locale);
 
                 var result = new Result

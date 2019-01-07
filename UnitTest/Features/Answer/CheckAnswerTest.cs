@@ -45,17 +45,17 @@ namespace UnitTest.Features.Answer
         }
 
         [Fact]
-        public async Task ThrowArgumentNullExceptionWhenAnswerIdDoesNotExist()
+        public async Task ThrowValidationExceptionWhenAnswerIdDoesNotExist()
         {
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
                             .WithAutoProperties()
                             .Create();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
+            await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
         }
 
         [Fact]
-        public async Task ThrowArgumentNullExceptionWhenAnswerIdDoesNotBelongToAQuestion()
+        public async Task ThrowValidationExceptionWhenAnswerIdDoesNotBelongToAQuestion()
         {
             var answer = _fixture.Build<DataModel.Models.Answer.Answer>()
                             .WithAutoProperties()
@@ -72,7 +72,7 @@ namespace UnitTest.Features.Answer
                             .With(x => x.AnswerId, answer.Id)
                             .Create();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
+            await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
         }
 
         [Fact]

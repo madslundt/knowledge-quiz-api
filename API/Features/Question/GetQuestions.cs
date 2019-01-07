@@ -15,9 +15,8 @@ namespace API.Features.Question
     {
         public class Query : IRequest<Result>
         {
-            public DataModel.Models.Localization.Locale Locale { get; set; }
             public Guid UserId { get; set; }
-
+            public DataModel.Models.Localization.Locale Locale { get; set; }
             public int Limit { get; set; } = 20;
         }
 
@@ -44,8 +43,9 @@ namespace API.Features.Question
         {
             public GetQuestionsValidator()
             {
-                RuleFor(question => question.UserId).NotEmpty();
-                RuleFor(question => question.Limit).InclusiveBetween(1, 50)
+                RuleFor(query => query.UserId).NotEmpty();
+                RuleFor(query => query.Locale).IsInEnum();
+                RuleFor(query => query.Limit).InclusiveBetween(1, 50)
                     .WithMessage($"{nameof(Query.Limit)} must be between 1 and 50");
             }
         }
