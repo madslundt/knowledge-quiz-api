@@ -7,8 +7,6 @@ namespace DataModel.Models.Localization
         public Locale Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-
-        public ICollection<Localization> Localizations { get; set; }
     }
 
     public enum Locale

@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace DataModel.Models.Answer
+namespace DataModel.Models.User
 {
-    public class AnswerContext
+    public class UserQuestionContext
     {
         public static void Build(ModelBuilder builder)
         {
-            builder.Entity<Answer>(b =>
+            builder.Entity<UserQuestion>(b =>
             {
                 b.Property(p => p.Id)
                     .ValueGeneratedOnAdd()
@@ -16,19 +19,21 @@ namespace DataModel.Models.Answer
                     .ValueGeneratedOnAdd()
                     .IsRequired();
 
-                b.Property(p => p.Created)
-                    .ValueGeneratedOnUpdate();
-
-                b.Property(p => p.IsCorrect)
+                b.Property(p => p.HintUsed)
                     .IsRequired();
 
                 b.HasOne(r => r.Question)
-                    .WithMany(r => r.Answers)
+                    .WithMany(r => r.UserQuestions)
                     .HasForeignKey(fk => fk.QuestionId)
                     .IsRequired();
 
+                b.HasOne(r => r.User)
+                    .WithMany(r => r.UserQuestions)
+                    .HasForeignKey(fk => fk.UserId)
+                    .IsRequired();
+
                 b.HasKey(k => k.Id);
-                b.ToTable("Answers");
+                b.ToTable("UserQuestions");
             });
         }
     }

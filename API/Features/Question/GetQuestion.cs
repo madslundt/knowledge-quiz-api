@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DataModel;
-using DataModel.Models.Localization;
-using DataModel.Models.Question;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

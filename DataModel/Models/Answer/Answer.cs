@@ -9,7 +9,7 @@ namespace DataModel.Models.Answer
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
-        public DateTime Updated { get; set; }
+        public DateTime? Updated { get; set; }
 
         public Guid QuestionId { get; set; }
         public Question.Question Question { get; set; }

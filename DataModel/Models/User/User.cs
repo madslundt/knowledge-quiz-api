@@ -15,5 +15,6 @@ namespace DataModel.Models.User
 
         public ICollection<UserMetadata> Metadata { get; set; }
         public ICollection<UserAnswer> UserAnswers { get; set; }
+        public ICollection<UserQuestion> UserQuestions { get; set; }
     }
 }

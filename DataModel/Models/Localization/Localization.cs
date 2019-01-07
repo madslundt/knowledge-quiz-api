@@ -8,7 +8,7 @@ namespace DataModel.Models.Localization
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
-        public DateTime Updated { get; set; }
+        public DateTime? Updated { get; set; }
         
         public string Text { get; set; }
 

@@ -16,7 +16,7 @@ namespace DataModel.Models.Question
                     .ValueGeneratedOnAdd()
                     .IsRequired();
 
-                b.HasAlternateKey(k => new { k.QuestionId, k.LocalizationId, k.QuestionTypeReference });
+                b.HasAlternateKey(k => new { k.QuestionId, k.LocalizationId, k.QuestionType });
 
                 b.HasOne(k => k.Question)
                     .WithMany(k => k.QuestionLocalizations)

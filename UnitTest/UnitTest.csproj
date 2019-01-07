@@ -21,7 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
+    <Folder Include="Features\User\" />
+    <Folder Include="Features\Question\" />
   </ItemGroup>
 
 </Project>

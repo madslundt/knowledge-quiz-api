@@ -29,9 +29,10 @@ namespace API.Features.User
         {
             public AddMetadataValidator()
             {
-                RuleFor(metadata => metadata.UserId).NotEmpty();
-                RuleFor(metadata => metadata.Metadata).NotEmpty();
-                RuleFor(metadata => metadata.Metadata).Must(ContainAtleastOneValidType)
+                RuleFor(command => command).NotNull();
+                RuleFor(command => command.UserId).NotEmpty();
+                RuleFor(command => command.Metadata).NotEmpty();
+                RuleFor(command => command.Metadata).Must(ContainAtleastOneValidType)
                     .WithMessage($"{nameof(Command.Metadata)} does not match metadata types");
             }
 
@@ -39,7 +40,7 @@ namespace API.Features.User
             {
                 foreach (var m in metadata)
                 {
-                    if (Enum.TryParse(typeof(UserMetadataType), m.Key, true, out _) && !string.IsNullOrWhiteSpace(m.Value))
+                    if (Enum.TryParse<UserMetadataType>(m.Key, true, out _) && !string.IsNullOrWhiteSpace(m.Value))
                     {
                         return true;
                     }
@@ -61,18 +62,28 @@ namespace API.Features.User
 
             public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
-                var doesUserExist = await DoesUserExist(message.UserId);
-
-                if (!doesUserExist)
-                {
-                    throw new ArgumentNullException($"Could not find {nameof(message.UserId)} '{message.UserId}'");
-                }
-
                 var parsedMetadata = ParseMetadata(message.Metadata, message.UserId);
-                _db.AddRange(parsedMetadata);
+
+                var metadataToAdd = await DistinctMetadata(message.UserId, parsedMetadata);
+
+                await _db.AddRangeAsync(metadataToAdd);
                 await _db.SaveChangesAsync(cancellationToken);
 
                 return Unit.Value;
+            }
+
+            private async Task<ICollection<UserMetadata>> DistinctMetadata(Guid userId, ICollection<UserMetadata> parsedMetadata)
+            {
+                var query = from userMetadata in _db.UserMetadata
+                            join parsedUserMetadata in parsedMetadata on new { userMetadata.MetadataType, userMetadata.Value } equals new { parsedUserMetadata.MetadataType, parsedUserMetadata.Value }
+                            where userMetadata.UserId == userId
+                            select parsedUserMetadata;
+
+                var metadata = await query.ToListAsync();
+
+                var result = parsedMetadata.Except(metadata).ToList();
+
+                return result;
             }
 
             private ICollection<UserMetadata> ParseMetadata(ICollection<Metadata> metadata, Guid userId)
@@ -80,7 +91,7 @@ namespace API.Features.User
                 var result = new List<UserMetadata>();
                 foreach (var m in metadata)
                 {
-                    if (Enum.TryParse(m.Key, true, out UserMetadataType metadataType))
+                    if (Enum.TryParse<UserMetadataType>(m.Key, true, out var metadataType))
                     {
                         var userMetadata = new UserMetadata
                         {
@@ -92,17 +103,6 @@ namespace API.Features.User
                         result.Add(userMetadata);
                     }
                 }
-
-                return result;
-            }
-
-            private async Task<bool> DoesUserExist(Guid userId)
-            {
-                var query = from user in _db.Users
-                    where user.Id == userId
-                    select user.Id;
-
-                var result = await query.AnyAsync();
 
                 return result;
             }

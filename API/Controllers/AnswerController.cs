@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Features.Answer;
@@ -10,11 +8,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace API.Controllers
 {
-    [Route("api/answer")]
+    [Route("api/answers")]
+    [Authorize]
     public class AnswerController : Controller
     {
         private readonly IMediator _mediator;
@@ -25,7 +22,6 @@ namespace API.Controllers
         }
 
         [HttpPost, Route("{answerId}")]
-        [Authorize]
         public async Task<IActionResult> AddAnswer([FromRoute] Guid answerId)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);

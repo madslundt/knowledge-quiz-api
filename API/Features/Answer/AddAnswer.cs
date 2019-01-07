@@ -8,7 +8,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Features.Question
+namespace API.Features.Answer
 {
     public class AddAnswer
     {
@@ -72,7 +72,7 @@ namespace API.Features.Question
                     UserId = userId
                 };
 
-                _db.UserAnswers.Add(userAnswer);
+                await _db.UserAnswers.AddAsync(userAnswer);
             }
         }
     }

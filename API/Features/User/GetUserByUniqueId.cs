@@ -25,6 +25,7 @@ namespace API.Features.User
         {
             public GetUserByUniqueIdValidator()
             {
+                RuleFor(query => query).NotNull();
                 RuleFor(user => user.UniqueId).NotEmpty();
             }
         }

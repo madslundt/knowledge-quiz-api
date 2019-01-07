@@ -17,8 +17,7 @@ namespace DataModel.Models.Question
                     .IsRequired();
 
                 b.Property(p => p.Updated)
-                    .ValueGeneratedOnUpdate()
-                    .IsRequired();
+                    .ValueGeneratedOnUpdate();
 
                 b.Property(p => p.ImageUrl);
                 

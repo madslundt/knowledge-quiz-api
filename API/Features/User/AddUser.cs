@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,8 @@ namespace API.Features.User
         {
             public AddUserValidator()
             {
-                RuleFor(metadata => metadata.UniqueId).NotEmpty();
+                RuleFor(command => command).NotNull();
+                RuleFor(command => command.UniqueId).NotEmpty();
             }
         }
 
@@ -38,11 +40,12 @@ namespace API.Features.User
 
                 if (doesUserExist)
                 {
-                    return Unit.Value; // TODO
+                    throw new DuplicateNameException($"{nameof(message.UniqueId)} '{message.UniqueId}' does already exist");
                 }
 
-                var user = PrepareUser(message.UniqueId); // TODO
+                var user = PrepareUser(message.UniqueId);
 
+                await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
 
                 return Unit.Value;
@@ -50,14 +53,12 @@ namespace API.Features.User
 
             private DataModel.Models.User.User PrepareUser(string uniqueId)
             {
-                var user = new DataModel.Models.User.User
+                var result = new DataModel.Models.User.User
                 {
                     UniqueId = uniqueId
                 };
 
-                _db.Users.Add(user);
-
-                return user;
+                return result;
             }
 
             private async Task<bool> DoesUserExist(string uniqueId)

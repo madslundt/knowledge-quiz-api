@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using API.Features.Question;
 using DataModel;
 using FluentValidation;
 using MediatR;
@@ -16,12 +15,14 @@ namespace API.Features.Answer
         public class Query : IRequest<Result>
         {
             public Guid AnswerId { get; set; }
+            public DataModel.Models.Localization.Locale Locale { get; set; }
         }
 
         public class Result
         {
             public bool IsCorrect { get; set; }
-            public Guid CorrectAnswerId { get; set; }
+            public ICollection<Answer> CorrectAnswers { get; set; }
+            public string Text { get; set; }
         }
 
         public class Answer
@@ -34,6 +35,7 @@ namespace API.Features.Answer
             public CheckAnswerValidator()
             {
                 RuleFor(question => question.AnswerId).NotEmpty();
+                RuleFor(query => query.Locale).IsInEnum();
             }
         }
 
@@ -41,46 +43,54 @@ namespace API.Features.Answer
         public class CheckAnswerHandler : IRequestHandler<Query, Result>
         {
             private readonly DatabaseContext _db;
-            private readonly IMediator _mediator;
 
-            public CheckAnswerHandler(DatabaseContext db, IMediator mediator)
+            public CheckAnswerHandler(DatabaseContext db)
             {
                 _db = db;
-                _mediator = mediator;
             }
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                var questionId = await GetQuestionId(message.AnswerId);
+                var correctAnswers = await GetCorrectAnswers(message.AnswerId);
 
-                if (questionId is null)
-                {
-                    throw new ArgumentNullException($"Could not find {nameof(message.AnswerId)} '{message.AnswerId}'");
-                }
-
-                var question = await _mediator.Send(new GetQuestion.Query
-                {
-                    QuestionId = questionId.Value
-                });
-
-                var correctAnswer = question.Answers.FirstOrDefault(answer => answer.IsCorrect);
+                var text = await GetQuestionText(message.AnswerId, message.Locale);
 
                 var result = new Result
                 {
-                    IsCorrect = correctAnswer.Id == message.AnswerId,
-                    CorrectAnswerId = correctAnswer.Id
+                    IsCorrect = correctAnswers.Any(answer => answer.Id == message.AnswerId),
+                    CorrectAnswers = correctAnswers,
+                    Text = text
                 };
 
                 return result;
             }
 
-            private async Task<Guid?> GetQuestionId(Guid answerId)
+            private async Task<string> GetQuestionText(Guid answerId, DataModel.Models.Localization.Locale locale)
             {
                 var query = from answer in _db.Answers
-                    where answer.Id == answerId
-                    select answer.QuestionId;
+                            join questionLocalization in _db.QuestionLocalizations on answer.QuestionId equals questionLocalization.QuestionId
+                            join localization in _db.Localizations on questionLocalization.LocalizationId equals localization.Id
+                            where answer.Id == answerId && questionLocalization.QuestionType == DataModel.Models.QuestionType.Final
+                            where localization.Locale == locale
+                            select localization.Text;
 
                 var result = await query.FirstOrDefaultAsync();
+
+                return result;
+            }
+
+            private async Task<ICollection<Answer>> GetCorrectAnswers(Guid answerId)
+            {
+                var query = from answer in _db.Answers
+                            join question in _db.Questions on answer.QuestionId equals question.Id
+                            join answer2 in _db.Answers on question.Id equals answer2.QuestionId
+                            where answer.Id == answerId && answer2.IsCorrect
+                            select new Answer
+                            {
+                                Id = answer2.Id
+                            };
+
+                var result = await query.ToListAsync();
 
                 return result;
             }

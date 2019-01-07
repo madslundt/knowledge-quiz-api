@@ -17,8 +17,7 @@ namespace DataModel.Models.Localization
                     .IsRequired();
 
                 b.Property(p => p.Updated)
-                    .ValueGeneratedOnUpdate()
-                    .IsRequired();
+                    .ValueGeneratedOnUpdate();
 
                 b.Property(p => p.Text)
                     .IsRequired();
@@ -26,7 +25,7 @@ namespace DataModel.Models.Localization
                 b.HasAlternateKey(k => new { Value = k.Text, k.Locale });
 
                 b.HasOne(r => r.LocaleReference)
-                    .WithMany(r => r.Localizations)
+                    .WithMany()
                     .HasForeignKey(fk => fk.Locale)
                     .IsRequired();
 

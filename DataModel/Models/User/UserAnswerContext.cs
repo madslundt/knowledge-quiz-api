@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace DataModel.Models.User
 {
@@ -15,7 +12,7 @@ namespace DataModel.Models.User
                     .ValueGeneratedOnAdd()
                     .IsRequired();
 
-                b.Property(p => p.Answered)
+                b.Property(p => p.Created)
                     .ValueGeneratedOnAdd()
                     .IsRequired();
 

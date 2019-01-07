@@ -35,6 +35,7 @@ namespace DataModel
         public DbSet<UserMetadata> UserMetadata { get; set; }
         public DbSet<MetadataTypeReference> MetadataTypeReferences { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
+        public DbSet<UserQuestion> UserQuestions { get; set; }
         public DbSet<UserBlacklist> UserBlacklist { get; set; }
 
         public DbSet<Question> Questions { get; set; }
@@ -55,6 +56,7 @@ namespace DataModel
             UserMetadataContext.Build(builder);
             MetadataTypeReferenceContext.Build(builder);
             UserAnswerContext.Build(builder);
+            UserQuestionContext.Build(builder);
             UserBlacklistContext.Build(builder);
 
             QuestionContext.Build(builder);

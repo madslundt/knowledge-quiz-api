@@ -78,7 +78,7 @@ namespace API
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
-            services.AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
+            services.AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); opt.Filters.Add(typeof(LocaleFilterAttribute)); })
                 .AddMetrics()
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
@@ -153,15 +153,15 @@ namespace API
             app.UseMetricsAllEndpoints();
             app.UseMetricsAllMiddleware();
 
-            app.UseHangfireServer(new BackgroundJobServerOptions
-            {
-                SchedulePollingInterval = TimeSpan.FromSeconds(30),
-                ServerCheckInterval = TimeSpan.FromMinutes(1),
-                ServerName = $"{Environment.MachineName}.{Guid.NewGuid()}",
-                WorkerCount = Environment.ProcessorCount * 5
-            });
+            //app.UseHangfireServer(new BackgroundJobServerOptions
+            //{
+            //    SchedulePollingInterval = TimeSpan.FromSeconds(30),
+            //    ServerCheckInterval = TimeSpan.FromMinutes(1),
+            //    ServerName = $"{Environment.MachineName}.{Guid.NewGuid()}",
+            //    WorkerCount = Environment.ProcessorCount * 5
+            //});
 
-            app.UseHangfireDashboard();
+            //app.UseHangfireDashboard();
             app.UseAuthentication();
 
             app.UseMvc();

@@ -19,7 +19,7 @@ namespace DataModel.Models.User
                 b.Property(p => p.Value)
                     .IsRequired();
 
-                b.HasAlternateKey(k => new { k.UserId, k.MetadataType });
+                b.HasAlternateKey(k => new { k.UserId, k.MetadataType, k.Value });
 
                 b.HasOne(r => r.MetadataTypeReference)
                     .WithMany()
