@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataModel.Models;
+using DataModel.Models.User;
+using FluentAssertions;
 using UnitTest.Common;
 using Xunit;
 
@@ -82,23 +85,71 @@ namespace UnitTest.Features.Question
 
             var localizations = GetLocalizations();
 
-            var questionLocalizations = questions.Select(question => Enumerable.Range(0, localizations.Count)
-                .Select(x => _fixture.Build<QuestionLocalization>()
-                            .WithAutoProperties()
-                            .With(xx => xx.QuestionId, question.Id)
-                            .With(xx => xx.Question, question)
-                            .Create())
-                .ToList());
+            var questionLocalizations = GetQuestionLocalizations(questions, localizations);
 
+            var user = _fixture.Build<User>()
+                .WithAutoProperties()
+                .Without(x => x.UserAnswers)
+                .Without(x => x.UserQuestions)
+                .Without(x => x.Metadata)
+                .Create();
+
+            _db.Localizations.AddRange(localizations);
+            _db.QuestionLocalizations.AddRange(questionLocalizations);
             _db.Questions.AddRange(questions);
+            _db.Users.Add(user);
             _db.SaveChanges();
+
+            var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
+                .WithAutoProperties()
+                .With(x => x.UserId, user.Id)
+                .With(x => x.Locale, DataModel.Models.Localization.Locale.en_US)
+                .Without(x => x.Limit)
+                .Create();
+
+            var result = await _mediator.Send(query);
+
+            result.Questions.Should().NotBeEmpty();
+            result.Questions.Count.Should().Be(20);
         }
 
-        private ICollection<DataModel.Models.Localization.LocaleReference> GetLocalizations()
+        private ICollection<DataModel.Models.Question.QuestionLocalization> GetQuestionLocalizations(
+            ICollection<DataModel.Models.Question.Question> questions, ICollection<DataModel.Models.Localization.Localization> localizations)
         {
-            var localizations = Enumerable.Range(0, Enum.GetValues(typeof(DataModel.Models.Localization.Locale)).Length)
-                            .Select(x => _fixture.Build<DataModel.Models.Localization.LocaleReference>()
+            var result = new List<DataModel.Models.Question.QuestionLocalization>();
+
+            foreach (var question in questions)
+            {
+                foreach (var localization in localizations)
+                {
+                    foreach (var type in Enum.GetValues(typeof(QuestionType)))
+                    {
+                        var questionLocalization = _fixture.Build<QuestionLocalization>()
+                            .WithAutoProperties()
+                            .With(x => x.QuestionId, question.Id)
+                            .With(x => x.Question, question)
+                            .With(x => x.QuestionType, type)
+                            .With(x => x.LocalizationId, localization.Id)
+                            .With(x => x.Localization, localization)
+                            .Create();
+
+                        result.Add(questionLocalization);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private ICollection<DataModel.Models.Localization.Localization> GetLocalizations()
+        {
+            var localizations = Enum.GetNames(typeof(DataModel.Models.Localization.Locale))
+                            .Select(x => _fixture.Build<DataModel.Models.Localization.Localization>()
                                         .WithAutoProperties()
+                                        .Without(xx => xx.AnswerLocalizations)
+                                        .Without(xx => xx.QuestionLocalizations)
+                                        .Without(xx => xx.LocaleReference)
+                    .With(xx => xx.Locale, Enum.Parse<DataModel.Models.Localization.Locale>(x))
                                         .Create())
                             .ToList();
 

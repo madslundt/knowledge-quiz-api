@@ -11,8 +11,6 @@ namespace DataModel.Models.User
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
 
-        public UserBlacklist UserBlacklist { get; set; }
-
         public ICollection<UserMetadata> Metadata { get; set; }
         public ICollection<UserAnswer> UserAnswers { get; set; }
         public ICollection<UserQuestion> UserQuestions { get; set; }

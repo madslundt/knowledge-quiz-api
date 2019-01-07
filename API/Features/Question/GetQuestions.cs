@@ -90,17 +90,23 @@ namespace API.Features.Question
             {
                 var query = from question in _db.Questions
                     join answer in _db.Answers on question.Id equals answer.QuestionId
+
                     join questionLocalization in _db.QuestionLocalizations on question.Id equals questionLocalization
                         .QuestionId
-                    join answerLocalization in _db.AnswerLocalizations on answer.Id equals answerLocalization.AnswerId
                     join qLocalization in _db.Localizations on questionLocalization.LocalizationId equals qLocalization
                         .Id
+
+                    join answerLocalization in _db.AnswerLocalizations on answer.Id equals answerLocalization.AnswerId
                     join aLocalization in _db.Localizations on answerLocalization.LocalizationId equals aLocalization.Id
+
                     where !skipQuestionIds.Contains(question.Id) && qLocalization.Locale == locale &&
                           aLocalization.Locale == locale && questionLocalization.QuestionType == QuestionType.Question
+
                     orderby Guid.NewGuid()
+
                     group new {answer, aLocalization} by new {question, qLocalization}
                     into gr
+
                     select new Question
                     {
                         Id = gr.Key.question.Id,
