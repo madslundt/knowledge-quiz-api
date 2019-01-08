@@ -21,6 +21,7 @@ namespace UnitTest.Common
         protected readonly DatabaseContext _db;
         protected readonly Mock<IBackgroundJobClient> _jobClientMock;
         protected readonly Fixture _fixture;
+        protected readonly SeedData _seedData;
 
         public TestBase()
         {
@@ -43,7 +44,7 @@ namespace UnitTest.Common
             _jobClientMock.Setup(x => x.Create(It.IsAny<Job>(), It.IsAny<EnqueuedState>()));
 
             _fixture = new Fixture();
-
+            _seedData = new SeedData(_fixture);
 
             IContainer container = new Container(cfg =>
             {

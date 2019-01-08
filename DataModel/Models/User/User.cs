@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataModel.Models.Question;
 
 namespace DataModel.Models.User
 {
@@ -14,5 +15,6 @@ namespace DataModel.Models.User
         public ICollection<UserMetadata> Metadata { get; set; }
         public ICollection<UserAnswer> UserAnswers { get; set; }
         public ICollection<UserQuestion> UserQuestions { get; set; }
+        public ICollection<QuestionReport> QuestionReports { get; set; }
     }
 }

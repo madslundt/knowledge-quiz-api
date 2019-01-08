@@ -1,12 +1,8 @@
 ﻿using AutoFixture;
-using DataModel.Models.Question;
 using FluentValidation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DataModel.Models;
 using DataModel.Models.User;
 using FluentAssertions;
 using UnitTest.Common;
@@ -78,14 +74,14 @@ namespace UnitTest.Features.Question
                 .Select(x => _fixture.Build<DataModel.Models.Question.Question>()
                             .WithAutoProperties()
                             .Without(xx => xx.UserQuestions)
-                            .With(xx => xx.Answers, GetAnswers())
+                            .With(xx => xx.Answers, _seedData.GetAnswers())
                             .Without(xx => xx.QuestionLocalizations)
                             .Create())
                 .ToList();
 
-            var localizations = GetLocalizations();
+            var localizations = _seedData.GetLocalizations();
 
-            var questionLocalizations = GetQuestionLocalizations(questions, localizations);
+            var questionLocalizations = _seedData.GetQuestionLocalizations(questions, localizations);
 
             var user = _fixture.Build<User>()
                 .WithAutoProperties()
@@ -111,64 +107,6 @@ namespace UnitTest.Features.Question
 
             result.Questions.Should().NotBeEmpty();
             result.Questions.Count.Should().Be(20);
-        }
-
-        private ICollection<DataModel.Models.Question.QuestionLocalization> GetQuestionLocalizations(
-            ICollection<DataModel.Models.Question.Question> questions, ICollection<DataModel.Models.Localization.Localization> localizations)
-        {
-            var result = new List<DataModel.Models.Question.QuestionLocalization>();
-
-            foreach (var question in questions)
-            {
-                foreach (var localization in localizations)
-                {
-                    foreach (var type in Enum.GetValues(typeof(QuestionType)))
-                    {
-                        var questionLocalization = _fixture.Build<QuestionLocalization>()
-                            .WithAutoProperties()
-                            .With(x => x.QuestionId, question.Id)
-                            .With(x => x.Question, question)
-                            .With(x => x.QuestionType, type)
-                            .With(x => x.LocalizationId, localization.Id)
-                            .With(x => x.Localization, localization)
-                            .Create();
-
-                        result.Add(questionLocalization);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private ICollection<DataModel.Models.Localization.Localization> GetLocalizations()
-        {
-            var localizations = Enum.GetNames(typeof(DataModel.Models.Localization.Locale))
-                            .Select(x => _fixture.Build<DataModel.Models.Localization.Localization>()
-                                        .WithAutoProperties()
-                                        .Without(xx => xx.AnswerLocalizations)
-                                        .Without(xx => xx.QuestionLocalizations)
-                                        .Without(xx => xx.LocaleReference)
-                    .With(xx => xx.Locale, Enum.Parse<DataModel.Models.Localization.Locale>(x))
-                                        .Create())
-                            .ToList();
-
-            return localizations;
-        }
-
-        private ICollection<DataModel.Models.Answer.Answer> GetAnswers()
-        {
-            var answers = Enumerable.Range(0, 4)
-                .Select(x => _fixture.Build<DataModel.Models.Answer.Answer>()
-                            .WithAutoProperties()
-                            .Without(xx => xx.QuestionId)
-                            .Without(xx => xx.Question)
-                            .Without(xx => xx.UserAnswers)
-                            .Without(xx => xx.AnswerLocalizations)
-                            .Create())
-                .ToList();
-
-            return answers;
         }
     }
 }

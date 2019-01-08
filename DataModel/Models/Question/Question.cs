@@ -15,5 +15,6 @@ namespace DataModel.Models.Question
         public ICollection<QuestionLocalization> QuestionLocalizations { get; set; }
         public ICollection<Answer.Answer> Answers { get; set; }
         public ICollection<User.UserQuestion> UserQuestions { get; set; }
+        public ICollection<QuestionReport> QuestionReports { get; set; }
     }
 }
