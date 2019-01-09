@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using DataModel;
+using DataModel.Models.Question;
+using FluentValidation;
+using MediatR;
 
 namespace API.Features.Question
 {
@@ -35,15 +40,15 @@ namespace API.Features.Question
 
             public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
-                var questionReport = await PrepareQuestionReport(message.UserId, message.QuestionId);
+                var questionReport = PrepareQuestionReport(message.UserId, message.QuestionId);
 
-                await _db.QuestionReport.AddAsync(questionReport);
+                await _db.QuestionReports.AddAsync(questionReport);
                 await _db.SaveChangesAsync();
 
                 return Unit.Value;
             }
 
-            private async Task<QuestionReport> PrepareQuestionReport(Guid userId, Guid questionId)
+            private QuestionReport PrepareQuestionReport(Guid userId, Guid questionId)
             {
                 var questionReport = new QuestionReport
                 {

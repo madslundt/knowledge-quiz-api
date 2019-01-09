@@ -4,7 +4,6 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnitTest.Common;
 using Xunit;
@@ -13,6 +12,14 @@ namespace UnitTest.Features.Question
 {
     public class MarkUserQuestionTest : TestBase
     {
+        [Fact]
+        public async Task ThrowArgumentNullExceptionWhenCommandIsNull()
+        {
+            var command = (API.Features.Question.MarkUserQuestion.Command) null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
+        }
+
         [Fact]
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
@@ -92,7 +99,7 @@ namespace UnitTest.Features.Question
 
             var userQuestions = _db.UserQuestions.ToList();
 
-            userQuestions.Where(uq => uq.UserId == command.UserId).Count().Should().Be(10);
+            userQuestions.Count(uq => uq.UserId == command.UserId).Should().Be(10);
             userQuestions.Where(uq => uq.HintUsed).Should().BeEmpty();
             var qIds = markQuestions.Select(mq => mq.QuestionId);
             userQuestions.Should().Contain(uq => qIds.Any(qid => qid == uq.QuestionId));
@@ -116,7 +123,7 @@ namespace UnitTest.Features.Question
 
             var userQuestions = _db.UserQuestions.ToList();
 
-            userQuestions.Where(uq => uq.UserId == command.UserId).Count().Should().Be(10);
+            userQuestions.Count(uq => uq.UserId == command.UserId).Should().Be(10);
             userQuestions.Where(uq => !uq.HintUsed).Should().BeEmpty();
             var qIds = markQuestions.Select(mq => mq.QuestionId);
             userQuestions.Should().Contain(uq => qIds.Any(qid => qid == uq.QuestionId));
@@ -139,9 +146,9 @@ namespace UnitTest.Features.Question
 
             var userQuestions = _db.UserQuestions.ToList();
 
-            userQuestions.Where(uq => uq.UserId == command.UserId).Count().Should().Be(10);
-            userQuestions.Where(uq => !uq.HintUsed).Count().Should().Be(markQuestions.Where(mq => !mq.HintUsed).Count());
-            userQuestions.Where(uq => uq.HintUsed).Count().Should().Be(markQuestions.Where(mq => mq.HintUsed).Count());
+            userQuestions.Count(uq => uq.UserId == command.UserId).Should().Be(10);
+            userQuestions.Count(uq => !uq.HintUsed).Should().Be(markQuestions.Count(mq => !mq.HintUsed));
+            userQuestions.Count(uq => uq.HintUsed).Should().Be(markQuestions.Count(mq => mq.HintUsed));
             var qIds = markQuestions.Select(mq => mq.QuestionId);
             userQuestions.Should().Contain(uq => qIds.Any(qid => qid == uq.QuestionId));
         }

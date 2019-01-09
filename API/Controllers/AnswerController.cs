@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Features.Answer;
-using API.Features.Question;
 using API.Infrastructure.MessageQueue;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,13 +21,14 @@ namespace API.Controllers
         }
 
         [HttpPost, Route("{answerId}")]
-        public async Task<IActionResult> AddAnswer([FromRoute] Guid answerId)
+        public async Task<IActionResult> AddAnswer([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] Guid answerId)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var result = await _mediator.Send(new CheckAnswer.Query
             {
-                AnswerId = answerId
+                AnswerId = answerId,
+                Locale = locale
             });
             
             _mediator.Enqueue(new AddAnswer.Command

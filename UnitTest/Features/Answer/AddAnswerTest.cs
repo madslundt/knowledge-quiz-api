@@ -12,6 +12,14 @@ namespace UnitTest.Features.Answer
     public class AddAnswerTest : TestBase
     {
         [Fact]
+        public async Task ThrowArgumentNullExceptionWhenCommandIsNull()
+        {
+            var command = (API.Features.Answer.AddAnswer.Command) null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
+        }
+
+        [Fact]
         public async Task ThrowValidationExceptionWhenAnswerIdIsNull()
         {
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()

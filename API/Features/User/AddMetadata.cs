@@ -16,10 +16,15 @@ namespace API.Features.User
         public class Command : IRequest
         {
             public Guid UserId { get; set; }
-            public ICollection<Metadata> Metadata { get; set; }
+            public Metadata Metadata { get; set; }
         }
 
         public class Metadata
+        {
+            public ICollection<MetadataItem> Metadatas { get; set; }
+        }
+
+        public class MetadataItem
         {
             public string Key { get; set; }
             public string Value { get; set; }
@@ -31,12 +36,13 @@ namespace API.Features.User
             {
                 RuleFor(command => command).NotNull();
                 RuleFor(command => command.UserId).NotEmpty();
-                RuleFor(command => command.Metadata).NotEmpty();
-                RuleFor(command => command.Metadata).Must(ContainAtleastOneValidType)
+                RuleFor(command => command.Metadata).NotNull();
+                RuleFor(command => command.Metadata.Metadatas).NotEmpty();
+                RuleFor(command => command.Metadata.Metadatas).Must(ContainAtleastOneValidType)
                     .WithMessage($"{nameof(Command.Metadata)} does not match metadata types");
             }
 
-            private bool ContainAtleastOneValidType(ICollection<Metadata> metadata)
+            private bool ContainAtleastOneValidType(ICollection<MetadataItem> metadata)
             {
                 foreach (var m in metadata)
                 {
@@ -62,7 +68,7 @@ namespace API.Features.User
 
             public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
-                var parsedMetadata = ParseMetadata(message.Metadata, message.UserId);
+                var parsedMetadata = ParseMetadata(message.Metadata.Metadatas, message.UserId);
 
                 var metadataToAdd = await DistinctMetadata(message.UserId, parsedMetadata);
 
@@ -74,7 +80,7 @@ namespace API.Features.User
 
             private async Task<ICollection<UserMetadata>> DistinctMetadata(Guid userId, ICollection<UserMetadata> parsedMetadata)
             {
-                var query = from userMetadata in _db.UserMetadata
+                var query = from userMetadata in _db.UserMetadatas
                             join parsedUserMetadata in parsedMetadata on new { userMetadata.MetadataType, userMetadata.Value } equals new { parsedUserMetadata.MetadataType, parsedUserMetadata.Value }
                             where userMetadata.UserId == userId
                             select parsedUserMetadata;
@@ -86,7 +92,7 @@ namespace API.Features.User
                 return result;
             }
 
-            private ICollection<UserMetadata> ParseMetadata(ICollection<Metadata> metadata, Guid userId)
+            private ICollection<UserMetadata> ParseMetadata(ICollection<MetadataItem> metadata, Guid userId)
             {
                 var result = new List<UserMetadata>();
                 foreach (var m in metadata)

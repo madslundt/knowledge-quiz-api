@@ -12,6 +12,14 @@ namespace UnitTest.Features.Answer
     public class CheckAnswerTest : TestBase
     {
         [Fact]
+        public async Task ThrowArgumentNullExceptionWhenQueryIsNull()
+        {
+            var query = (API.Features.Answer.CheckAnswer.Query) null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
+        }
+
+        [Fact]
         public async Task ThrowValidationExceptionWhenAnswerIdIsNull()
         {
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
@@ -83,6 +91,7 @@ namespace UnitTest.Features.Answer
                             .Without(x => x.UserQuestions)
                             .Without(x => x.Answers)
                             .Without(x => x.QuestionLocalizations)
+                            .Without(x => x.QuestionReports)
                             .Create();
 
             var answers = Enumerable.Range(0, 10)
@@ -124,6 +133,7 @@ namespace UnitTest.Features.Answer
                             .Without(x => x.UserQuestions)
                             .Without(x => x.Answers)
                             .Without(x => x.QuestionLocalizations)
+                            .Without(x => x.QuestionReports)
                             .Create();
 
             var answers = Enumerable.Range(0, 10)

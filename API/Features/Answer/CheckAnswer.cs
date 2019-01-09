@@ -34,7 +34,8 @@ namespace API.Features.Answer
         {
             public CheckAnswerValidator()
             {
-                RuleFor(question => question.AnswerId).NotEmpty();
+                RuleFor(query => query).NotNull();
+                RuleFor(query => query.AnswerId).NotEmpty();
                 RuleFor(query => query.Locale).IsInEnum();
             }
         }

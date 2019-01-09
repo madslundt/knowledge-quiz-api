@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Features.Question;
-using API.Infrastructure.MagicString;
 using API.Infrastructure.MessageQueue;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +81,20 @@ namespace API.Controllers
             });
 
             return Ok(result);
+        }
+
+        [HttpPost, Route("{questionId}/report")]
+        public async Task<IActionResult> ReportQuestion([FromRoute] Guid questionId)
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await _mediator.Send(new ReportQuestion.Command
+            {
+                UserId = Guid.Parse(userId),
+                QuestionId = questionId
+            });
+
+            return Ok();
         }
     }
 }

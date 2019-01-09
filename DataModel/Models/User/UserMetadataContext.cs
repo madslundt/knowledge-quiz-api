@@ -27,12 +27,12 @@ namespace DataModel.Models.User
                     .IsRequired();
 
                 b.HasOne(r => r.User)
-                    .WithMany(r => r.Metadata)
+                    .WithMany(r => r.Metadatas)
                     .HasForeignKey(fk => fk.UserId)
                     .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("UserMetadata");
+                b.ToTable("UserMetadatas");
             });
         }
     }

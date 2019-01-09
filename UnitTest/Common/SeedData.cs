@@ -4,6 +4,8 @@ using DataModel.Models.Question;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataModel.Models.Answer;
+using DataModel.Models.Localization;
 
 namespace UnitTest.Common
 {
@@ -16,7 +18,7 @@ namespace UnitTest.Common
         }
 
         public ICollection<QuestionLocalization> GetQuestionLocalizations(
-            ICollection<Question> questions, ICollection<DataModel.Models.Localization.Localization> localizations)
+            ICollection<Question> questions, ICollection<Localization> localizations)
         {
             var result = new List<QuestionLocalization>();
 
@@ -43,25 +45,25 @@ namespace UnitTest.Common
             return result;
         }
 
-        public ICollection<DataModel.Models.Localization.Localization> GetLocalizations()
+        public ICollection<Localization> GetLocalizations()
         {
-            var localizations = Enum.GetNames(typeof(DataModel.Models.Localization.Locale))
-                            .Select(x => _fixture.Build<DataModel.Models.Localization.Localization>()
+            var localizations = Enum.GetNames(typeof(Locale))
+                            .Select(x => _fixture.Build<Localization>()
                                         .WithAutoProperties()
                                         .Without(xx => xx.AnswerLocalizations)
                                         .Without(xx => xx.QuestionLocalizations)
                                         .Without(xx => xx.LocaleReference)
-                    .With(xx => xx.Locale, Enum.Parse<DataModel.Models.Localization.Locale>(x))
+                    .With(xx => xx.Locale, Enum.Parse<Locale>(x))
                                         .Create())
                             .OrderBy(x => Guid.NewGuid()).ToList();
 
             return localizations;
         }
 
-        public ICollection<DataModel.Models.Answer.Answer> GetAnswers(int limit = 4)
+        public ICollection<Answer> GetAnswers(int limit = 4)
         {
             var answers = Enumerable.Range(0, limit)
-                .Select(x => _fixture.Build<DataModel.Models.Answer.Answer>()
+                .Select(x => _fixture.Build<Answer>()
                             .WithAutoProperties()
                             .Without(xx => xx.QuestionId)
                             .Without(xx => xx.Question)
@@ -86,6 +88,29 @@ namespace UnitTest.Common
                 .ToList();
 
             return questions;
+        }
+
+        public ICollection<AnswerLocalization> GetAnswerLocalizations(ICollection<Answer> answers, ICollection<Localization> localizations)
+        {
+            var result = new List<AnswerLocalization>();
+
+            foreach (var answer in answers)
+            {
+                foreach (var localization in localizations)
+                {
+                    var answerLocalization = _fixture.Build<AnswerLocalization>()
+                        .WithAutoProperties()
+                        .With(x => x.AnswerId, answer.Id)
+                        .With(x => x.Answer, answer)
+                        .With(x => x.LocalizationId, localization.Id)
+                        .With(x => x.Localization, localization)
+                        .Create();
+
+                    result.Add(answerLocalization);
+                }
+            }
+
+            return result;
         }
     }
 }

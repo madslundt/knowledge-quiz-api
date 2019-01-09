@@ -13,6 +13,14 @@ namespace UnitTest.Features.Question
     public class GetQuestionHintTest : TestBase
     {
         [Fact]
+        public async Task ThrowArgumentNullExceptionWhenQueryIsNull()
+        {
+            var query = (API.Features.Question.GetQuestionHint.Query) null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
+        }
+
+        [Fact]
         public async Task ThrowValidationExceptionWhenLocaleIsEmpty()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()

@@ -32,7 +32,7 @@ namespace DataModel
         { }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<UserMetadata> UserMetadata { get; set; }
+        public DbSet<UserMetadata> UserMetadatas { get; set; }
         public DbSet<MetadataTypeReference> MetadataTypeReferences { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<UserQuestion> UserQuestions { get; set; }

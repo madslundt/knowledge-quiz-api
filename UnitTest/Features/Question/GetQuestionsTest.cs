@@ -13,6 +13,14 @@ namespace UnitTest.Features.Question
     public class GetQuestionsTest : TestBase
     {
         [Fact]
+        public async Task ThrowArgumentNullExceptionWhenQueryIsNull()
+        {
+            var command = (API.Features.Question.GetQuestions.Query) null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
+        }
+
+        [Fact]
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
@@ -76,6 +84,7 @@ namespace UnitTest.Features.Question
                             .Without(xx => xx.UserQuestions)
                             .With(xx => xx.Answers, _seedData.GetAnswers())
                             .Without(xx => xx.QuestionLocalizations)
+                            .Without(xx => xx.QuestionReports)
                             .Create())
                 .ToList();
 
@@ -83,17 +92,24 @@ namespace UnitTest.Features.Question
 
             var questionLocalizations = _seedData.GetQuestionLocalizations(questions, localizations);
 
-            var user = _fixture.Build<User>()
+            var user = _fixture.Build<DataModel.Models.User.User>()
                 .WithAutoProperties()
                 .Without(x => x.UserAnswers)
                 .Without(x => x.UserQuestions)
-                .Without(x => x.Metadata)
+                .Without(x => x.Metadatas)
+                .Without(x => x.QuestionReports)
                 .Create();
 
             _db.Localizations.AddRange(localizations);
             _db.QuestionLocalizations.AddRange(questionLocalizations);
             _db.Questions.AddRange(questions);
             _db.Users.Add(user);
+            _db.SaveChanges();
+
+            var answers = _db.Answers.ToList();
+            var answerLocalizations = _seedData.GetAnswerLocalizations(answers, localizations);
+
+            _db.AnswerLocalizations.AddRange(answerLocalizations);
             _db.SaveChanges();
 
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
@@ -105,8 +121,13 @@ namespace UnitTest.Features.Question
 
             var result = await _mediator.Send(query);
 
+            var currentLocaleLocalizations =
+                localizations.Where(localization => localization.Locale == query.Locale).ToList();
+
             result.Questions.Should().NotBeEmpty();
             result.Questions.Count.Should().Be(20);
+            result.Questions.Should().OnlyContain(question =>
+                currentLocaleLocalizations.Any(localization => localization.Text == question.Text));
         }
     }
 }

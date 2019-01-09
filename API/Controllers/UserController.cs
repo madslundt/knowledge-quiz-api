@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -49,7 +48,7 @@ namespace API.Controllers
 
         [HttpPost, Route("metadata")]
         [Authorize]
-        public async Task<IActionResult> AddMetadata([FromBody] ICollection<AddMetadata.Metadata> metadata)
+        public async Task<IActionResult> AddMetadata([FromBody] AddMetadata.Metadata metadata)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 

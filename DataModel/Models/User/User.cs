@@ -12,7 +12,7 @@ namespace DataModel.Models.User
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
 
-        public ICollection<UserMetadata> Metadata { get; set; }
+        public ICollection<UserMetadata> Metadatas { get; set; }
         public ICollection<UserAnswer> UserAnswers { get; set; }
         public ICollection<UserQuestion> UserQuestions { get; set; }
         public ICollection<QuestionReport> QuestionReports { get; set; }

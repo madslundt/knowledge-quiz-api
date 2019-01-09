@@ -20,8 +20,4 @@
     <ProjectReference Include="..\API\API.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\User\" />
-  </ItemGroup>
-
 </Project>
