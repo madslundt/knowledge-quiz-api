@@ -9,7 +9,6 @@ using AutoMapper;
 using CorrelationId;
 using DataModel;
 using DataModel.Models;
-using DataModel.Models.User;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using IdentityServer4.AccessTokenValidation;
@@ -99,8 +98,6 @@ namespace API
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(10);
                 });
-
-            
 
             IContainer container = new Container();
             container.Configure(config =>

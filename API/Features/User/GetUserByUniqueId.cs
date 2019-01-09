@@ -18,7 +18,7 @@ namespace API.Features.User
 
         public class Result
         {
-            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
         }
 
         public class GetUserByUniqueIdValidator : AbstractValidator<Query>
@@ -26,7 +26,7 @@ namespace API.Features.User
             public GetUserByUniqueIdValidator()
             {
                 RuleFor(query => query).NotNull();
-                RuleFor(user => user.UniqueId).NotEmpty();
+                RuleFor(query => query.UniqueId).NotEmpty();
             }
         }
 
@@ -58,7 +58,7 @@ namespace API.Features.User
                             where user.UniqueId == uniqueId
                             select new Result
                             {
-                                Id = user.Id
+                                UserId = user.Id
                             };
 
                 var result = await query.FirstOrDefaultAsync();

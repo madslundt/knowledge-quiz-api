@@ -3,7 +3,9 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,14 +20,15 @@ namespace API.Features.User
 
         public class Result
         {
-            public Guid Id { get; set; }
+            public string Token { get; set; }
         }
 
         public class GetUserValidator : AbstractValidator<Query>
         {
             public GetUserValidator()
             {
-                RuleFor(user => user.UserId).NotEmpty();
+                RuleFor(query => query).NotNull();
+                RuleFor(query => query.UserId).NotEmpty();
             }
         }
 
@@ -41,24 +44,35 @@ namespace API.Features.User
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                var result = await Get(message.UserId);
+                var userId = await Get(message.UserId);
 
-                if (result is null)
+                if (userId == Guid.Empty)
                 {
                     throw new ArgumentNullException($"Could not find {nameof(message.UserId)} '{message.UserId}'");
                 }
 
+                var tokenHandler = new JwtSecurityTokenHandler();
+
+                ClaimsIdentity identity = new ClaimsIdentity();
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId.ToString(), ClaimValueTypes.String));
+
+                var securityToken = tokenHandler.CreateJwtSecurityToken(subject: identity);
+
+                var token = tokenHandler.WriteToken(securityToken);
+
+                var result = new Result
+                {
+                    Token = token
+                };
+
                 return result;
             }
 
-            private async Task<Result> Get(Guid userId)
+            private async Task<Guid> Get(Guid userId)
             {
                 var query = from user in _db.Users
-                            where user.Id == userId
-                            select new Result
-                            {
-                                Id = user.Id
-                            };
+                    where user.Id == userId
+                    select user.Id;
 
                 var result = await query.FirstOrDefaultAsync();
 
