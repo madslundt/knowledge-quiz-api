@@ -30,7 +30,7 @@ namespace DataModel.Models.Localization
             });
         }
 
-        private static ICollection<LocaleReference> GetSeedData()
+        private static LocaleReference[] GetSeedData()
         {
             var result = Enum.GetValues(typeof(Locale)).Cast<Locale>().Select(userMetadata =>
             {
@@ -42,7 +42,7 @@ namespace DataModel.Models.Localization
                     Code = userMetadata.ToString(),
                     Name = name
                 };
-            }).ToList();
+            }).ToArray();
 
             return result;
         }

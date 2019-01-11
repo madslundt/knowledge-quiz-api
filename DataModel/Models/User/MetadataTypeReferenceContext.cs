@@ -27,14 +27,14 @@ namespace DataModel.Models.User
             });
         }
 
-        private static ICollection<MetadataTypeReference> GetSeedData()
+        private static MetadataTypeReference[] GetSeedData()
         {
             var result = Enum.GetValues(typeof(UserMetadataType)).Cast<UserMetadataType>().Select(userMetadata =>
                 new MetadataTypeReference
                 {
                     Id = userMetadata,
                     Name = userMetadata.ToString()
-                }).ToList();
+                }).ToArray();
 
             return result;
         }

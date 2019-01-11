@@ -26,14 +26,14 @@ namespace DataModel.Models.Question
             });
         }
 
-        private static ICollection<QuestionTypeReference> GetSeedData()
+        private static QuestionTypeReference[] GetSeedData()
         {
             var result = Enum.GetValues(typeof(QuestionType)).Cast<QuestionType>().Select(userMetadata =>
                 new QuestionTypeReference
                 {
                     Id = userMetadata,
                     Name = userMetadata.ToString()
-                }).ToList();
+                }).ToArray();
 
             return result;
         }

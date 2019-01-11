@@ -8,21 +8,21 @@ using Microsoft.EntityFrameworkCore;
 namespace DataModel
 {
     // Add migration
-    // dotnet ef migrations add <MIGRATION NAME> -s ../Src
+    // dotnet ef migrations add <MIGRATION NAME> -s ../API
 
     // Update database with latest migration(s)
-    // dotnet ef database update -s ../Src
+    // dotnet ef database update -s ../API
 
     // Remove latest migration
-    // dotnet ef migrations remove -s ../Src
+    // dotnet ef migrations remove -s ../API
 
     // Revert the database to a migration
-    // dotnet ef database update <MIGRATION NAME> -s ../Src
+    // dotnet ef database update <MIGRATION NAME> -s ../API
 
     // Generate SQL script
-    // dotnet ef migrations script -s ../Src
+    // dotnet ef migrations script -s ../API
 
-    // -s ../Src is used to point to appsettings in Src application. 
+    // -s ../API is used to point to appsettings in API application. 
     // Remember to set environment eg. 'setx ASPNETCORE_ENVIRONMENT Development'
 
     public class DatabaseContext : DbContext
