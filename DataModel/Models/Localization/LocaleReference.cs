@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataModel.Models.Localization
 {
@@ -11,7 +13,10 @@ namespace DataModel.Models.Localization
 
     public enum Locale
     {
+        [Display(Name = "English")]
         en_US = 1,
+
+        [Display(Name = "Dansk")]
         da_DK = 2
     }
 }

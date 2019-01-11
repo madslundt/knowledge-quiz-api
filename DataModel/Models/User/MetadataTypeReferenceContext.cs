@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,21 @@ namespace DataModel.Models.User
 
                 b.HasKey(k => k.Id);
                 b.ToTable("MetadataTypeReferences");
+
+                b.HasData(GetSeedData());
             });
+        }
+
+        private static ICollection<MetadataTypeReference> GetSeedData()
+        {
+            var result = Enum.GetValues(typeof(UserMetadataType)).Cast<UserMetadataType>().Select(userMetadata =>
+                new MetadataTypeReference
+                {
+                    Id = userMetadata,
+                    Name = userMetadata.ToString()
+                }).ToList();
+
+            return result;
         }
     }
 }

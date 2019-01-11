@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataModel.Models.Question
 {
@@ -18,7 +21,21 @@ namespace DataModel.Models.Question
 
                 b.HasKey(k => k.Id);
                 b.ToTable("QuestionTypeReferences");
+
+                b.HasData(GetSeedData());
             });
+        }
+
+        private static ICollection<QuestionTypeReference> GetSeedData()
+        {
+            var result = Enum.GetValues(typeof(QuestionType)).Cast<QuestionType>().Select(userMetadata =>
+                new QuestionTypeReference
+                {
+                    Id = userMetadata,
+                    Name = userMetadata.ToString()
+                }).ToList();
+
+            return result;
         }
     }
 }
