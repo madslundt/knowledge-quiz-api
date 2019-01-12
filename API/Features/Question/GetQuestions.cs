@@ -90,13 +90,12 @@ namespace API.Features.Question
                 DataModel.Models.Localization.Locale locale, int limit)
             {
                 var query = from question in _db.Questions
-                    join answer in _db.Answers on question.Id equals answer.QuestionId
-
                     join questionLocalization in _db.QuestionLocalizations on question.Id equals questionLocalization
                         .QuestionId
                     join qLocalization in _db.Localizations on questionLocalization.LocalizationId equals qLocalization
                         .Id
 
+                    join answer in _db.Answers on question.Id equals answer.QuestionId
                     join answerLocalization in _db.AnswerLocalizations on answer.Id equals answerLocalization.AnswerId
                     join aLocalization in _db.Localizations on answerLocalization.LocalizationId equals aLocalization.Id
 
@@ -105,7 +104,7 @@ namespace API.Features.Question
 
                     orderby Guid.NewGuid()
 
-                    group new {answer, aLocalization} by new {question, qLocalization}
+                    group new Answer {Id = answer.Id, Text = aLocalization.Text } by new {question, qLocalization}
                     into gr
 
                     select new Question
@@ -113,13 +112,10 @@ namespace API.Features.Question
                         Id = gr.Key.question.Id,
                         Text = gr.Key.qLocalization.Text,
                         ImageUrl = gr.Key.question.ImageUrl,
-
-                        Answers = gr.Select(a => new Answer
-                        {
-                            Id = a.answer.Id,
-                            Text = a.aLocalization.Text
-                        }).ToList()
+                        Answers = gr.ToList()
                     };
+
+                var sql = query.ToString();
 
                 var result = await query.Take(limit).ToListAsync();
 
