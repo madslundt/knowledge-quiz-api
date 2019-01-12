@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DataModel.Models;
 using UnitTest.Common;
 using Xunit;
 
@@ -70,7 +71,7 @@ namespace UnitTest.Features.Question
 
             var localizations = _seedData.GetLocalizations();
 
-            var questionLocalizations = _seedData.GetQuestionLocalizations(questions, localizations);
+            var questionLocalizations = _seedData.GetQuestionLocalizations(questions, localizations.ToList());
 
             _db.Questions.AddRange(questions);
             _db.Localizations.AddRange(localizations);
@@ -78,7 +79,7 @@ namespace UnitTest.Features.Question
             _db.SaveChanges();
 
             var locale = localizations.First().Locale;
-            var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).First(ql => ql.QuestionId == questions.First().Id && ql.Localization.Locale == locale);
+            var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).First(ql => ql.QuestionId == questions.First().Id && ql.Localization.Locale == locale && ql.QuestionType == QuestionType.Hint);
 
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
                             .WithAutoProperties()

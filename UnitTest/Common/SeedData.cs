@@ -18,44 +18,49 @@ namespace UnitTest.Common
         }
 
         public ICollection<QuestionLocalization> GetQuestionLocalizations(
-            ICollection<Question> questions, ICollection<Localization> localizations)
+            ICollection<Question> questions, IList<Localization> localizations)
         {
             var result = new List<QuestionLocalization>();
 
+            var random = new Random();
             foreach (var question in questions)
             {
-                foreach (var localization in localizations)
+                foreach (var type in Enum.GetValues(typeof(QuestionType)))
                 {
-                    foreach (var type in Enum.GetValues(typeof(QuestionType)))
-                    {
-                        var questionLocalization = _fixture.Build<QuestionLocalization>()
-                            .WithAutoProperties()
-                            .With(x => x.QuestionId, question.Id)
-                            .With(x => x.Question, question)
-                            .With(x => x.QuestionType, type)
-                            .With(x => x.LocalizationId, localization.Id)
-                            .With(x => x.Localization, localization)
-                            .Create();
+                    int index = random.Next(localizations.Count);
+                    var localization = localizations[index];
 
-                        result.Add(questionLocalization);
-                    }
+                    var questionLocalization = _fixture.Build<QuestionLocalization>()
+                        .WithAutoProperties()
+                        .With(x => x.QuestionId, question.Id)
+                        .With(x => x.Question, question)
+                        .With(x => x.QuestionType, type)
+                        .With(x => x.LocalizationId, localization.Id)
+                        .With(x => x.Localization, localization)
+                        .Create();
+
+                    result.Add(questionLocalization);
                 }
             }
 
             return result;
         }
 
-        public ICollection<Localization> GetLocalizations()
+        public ICollection<Localization> GetLocalizations(int limit = 100)
         {
-            var localizations = Enum.GetNames(typeof(Locale))
-                            .Select(x => _fixture.Build<Localization>()
-                                        .WithAutoProperties()
-                                        .Without(xx => xx.AnswerLocalizations)
-                                        .Without(xx => xx.QuestionLocalizations)
-                                        .Without(xx => xx.LocaleReference)
-                    .With(xx => xx.Locale, Enum.Parse<Locale>(x))
-                                        .Create())
-                            .OrderBy(x => Guid.NewGuid()).ToList();
+            var localizations = new List<Localization>();
+            foreach (var l in Enum.GetNames(typeof(Locale)))
+            {
+                localizations.AddRange(Enumerable.Range(0, limit)
+                    .Select(xx => _fixture.Build<Localization>()
+                        .WithAutoProperties()
+                        .Without(xxx => xxx.AnswerLocalizations)
+                        .Without(xxx => xxx.QuestionLocalizations)
+                        .Without(xxx => xxx.LocaleReference)
+                        .With(xxx => xxx.Locale, Enum.Parse<Locale>(l))
+                        .Create())
+                    .OrderBy(xx => Guid.NewGuid()).ToList());
+            }
 
             return localizations;
         }
@@ -90,15 +95,18 @@ namespace UnitTest.Common
             return questions;
         }
 
-        public ICollection<AnswerLocalization> GetAnswerLocalizations(ICollection<Answer> answers, ICollection<Localization> localizations)
+        public ICollection<AnswerLocalization> GetAnswerLocalizations(ICollection<Answer> answers, IList<Localization> localizations)
         {
             var result = new List<AnswerLocalization>();
 
+            var random = new Random();
+
             foreach (var answer in answers)
             {
-                foreach (var localization in localizations)
-                {
-                    var answerLocalization = _fixture.Build<AnswerLocalization>()
+                int index = random.Next(localizations.Count);
+                var localization = localizations[index];
+
+                var answerLocalization = _fixture.Build<AnswerLocalization>()
                         .WithAutoProperties()
                         .With(x => x.AnswerId, answer.Id)
                         .With(x => x.Answer, answer)
@@ -106,8 +114,7 @@ namespace UnitTest.Common
                         .With(x => x.Localization, localization)
                         .Create();
 
-                    result.Add(answerLocalization);
-                }
+                result.Add(answerLocalization);
             }
 
             return result;
