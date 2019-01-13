@@ -78,7 +78,8 @@ namespace UnitTest.Features.User
             var result = await _mediator.Send(query);
 
             result.Should().NotBeNull();
-            result.Token.Should().NotBeEmpty();
+            result.Id.Should().NotBeEmpty();
+            result.Id.Should().Be(query.UserId);
         }
     }
 }

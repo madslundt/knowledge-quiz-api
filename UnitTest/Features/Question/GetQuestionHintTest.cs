@@ -79,7 +79,7 @@ namespace UnitTest.Features.Question
             _db.SaveChanges();
 
             var locale = localizations.First().Locale;
-            var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).First(ql => ql.QuestionId == questions.First().Id && ql.Localization.Locale == locale && ql.QuestionType == QuestionType.Hint);
+            var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).FirstOrDefault(ql => ql.QuestionId == questions.First().Id && ql.Localization.Locale == locale && ql.QuestionType == QuestionType.Hint);
 
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
                             .WithAutoProperties()

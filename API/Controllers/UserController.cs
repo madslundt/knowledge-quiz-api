@@ -39,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserByUniqueId([FromBody] GetUserByUniqueId.Query user)
+        public async Task<IActionResult> GetUserByUniqueId([FromBody] GetUserToken.Query user)
         {
             var result = await _mediator.Send(user);
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using API.Features.User;
 using AutoFixture;
@@ -17,7 +15,7 @@ namespace UnitTest.Features.User
         [Fact]
         public async Task ThrowArgumentNullExceptionWhenQueryIsNull()
         {
-            var query = (GetUserByUniqueId.Query) null;
+            var query = (GetUserToken.Query) null;
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
         }
@@ -25,7 +23,7 @@ namespace UnitTest.Features.User
         [Fact]
         public async Task ThrowValidationExceptionWhenUniqueIdIsNull()
         {
-            var query = _fixture.Build<GetUserByUniqueId.Query>()
+            var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
                 .Without(x => x.UniqueId)
                 .Create();
@@ -36,7 +34,7 @@ namespace UnitTest.Features.User
         [Fact]
         public async Task ThrowValidationExceptionWhenUniqueIdIsEmpty()
         {
-            var query = _fixture.Build<GetUserByUniqueId.Query>()
+            var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
                 .With(x => x.UniqueId, string.Empty)
                 .Create();
@@ -47,7 +45,7 @@ namespace UnitTest.Features.User
         [Fact]
         public async Task ThrowArgumentNullExceptionWhenUniqueIdDoesNotExist()
         {
-            var query = _fixture.Build<GetUserByUniqueId.Query>()
+            var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
                 .Create();
 
@@ -72,7 +70,7 @@ namespace UnitTest.Features.User
 
             var expectedUser = users[40];
 
-            var query = _fixture.Build<GetUserByUniqueId.Query>()
+            var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
                 .With(x => x.UniqueId, expectedUser.UniqueId)
                 .Create();
@@ -80,8 +78,7 @@ namespace UnitTest.Features.User
             var result = await _mediator.Send(query);
 
             result.Should().NotBeNull();
-            result.UserId.Should().NotBeEmpty();
-            result.UserId.Should().Be(expectedUser.Id);
+            result.Token.Should().NotBeEmpty();
         }
     }
 }
