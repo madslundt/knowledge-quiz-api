@@ -28,6 +28,7 @@ namespace API.Controllers
         }
 
         [HttpGet, Route("{userId}")]
+        [Authorize]
         public async Task<IActionResult> GetUser([FromRoute] Guid userId)
         {
             var result = await _mediator.Send(new GetUser.Query
