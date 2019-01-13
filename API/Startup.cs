@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using StructureMap;
 
 namespace API
@@ -153,15 +154,15 @@ namespace API
             app.UseMetricsAllEndpoints();
             app.UseMetricsAllMiddleware();
 
-            //app.UseHangfireServer(new BackgroundJobServerOptions
-            //{
-            //    SchedulePollingInterval = TimeSpan.FromSeconds(30),
-            //    ServerCheckInterval = TimeSpan.FromMinutes(1),
-            //    ServerName = $"{Environment.MachineName}.{Guid.NewGuid()}",
-            //    WorkerCount = Environment.ProcessorCount * 5
-            //});
+            app.UseHangfireServer(new BackgroundJobServerOptions
+            {
+                SchedulePollingInterval = TimeSpan.FromSeconds(30),
+                ServerCheckInterval = TimeSpan.FromMinutes(1),
+                ServerName = $"{Environment.MachineName}.{Guid.NewGuid()}",
+                WorkerCount = Environment.ProcessorCount * 5
+            });
 
-            //app.UseHangfireDashboard();
+            app.UseHangfireDashboard();
             app.UseAuthentication();
 
             app.UseMvc();
