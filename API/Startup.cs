@@ -11,6 +11,7 @@ using DataModel;
 using DataModel.Models;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using Hangfire.Dashboard;
 using IdentityServer4.AccessTokenValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -34,7 +35,7 @@ namespace API
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true) 
+                .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -52,10 +53,12 @@ namespace API
             services.AddAutoMapper(typeof(Startup));
 
             services.AddMediatR(typeof(Startup));
-            
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
-            
-            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString(ConnectionStringKeys.Hangfire)));
+
+            services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
+
+            services.AddHangfire(x =>
+                x.UseSqlServerStorage(Configuration.GetConnectionString(ConnectionStringKeys.Hangfire)));
 
             services.AddCorrelationId();
 
@@ -79,7 +82,11 @@ namespace API
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
-            services.AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); opt.Filters.Add(typeof(LocaleFilterAttribute)); })
+            services.AddMvc(opt =>
+                {
+                    opt.Filters.Add(typeof(ExceptionFilter));
+                    opt.Filters.Add(typeof(LocaleFilterAttribute));
+                })
                 .AddMetrics()
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
@@ -101,10 +108,7 @@ namespace API
                 });
 
             IContainer container = new Container();
-            container.Configure(config =>
-            {
-                config.Populate(services);
-            });
+            container.Configure(config => { config.Populate(services); });
 
             metrics.ReportRunner.RunAllAsync();
 
@@ -124,7 +128,8 @@ namespace API
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical(ex, $"Cannot create instance of controller {controllerType.FullName}, it is missing some services");
+                    _logger.LogCritical(ex,
+                        $"Cannot create instance of controller {controllerType.FullName}, it is missing some services");
                 }
             }
 
@@ -133,7 +138,7 @@ namespace API
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
-            IApplicationBuilder app, 
+            IApplicationBuilder app,
             IHostingEnvironment env,
             ILoggerFactory loggerFactory)
         {
@@ -162,10 +167,26 @@ namespace API
                 WorkerCount = Environment.ProcessorCount * 5
             });
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                IsReadOnlyFunc = (DashboardContext context) => true,
+                Authorization = new[] {new MyAuthorizationFilter()}
+            });
             app.UseAuthentication();
 
             app.UseMvc();
+        }
+
+        public class MyAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                var httpContext = context.GetHttpContext();
+
+                // Allow all authenticated users to see the Dashboard (potentially dangerous).
+                //return httpContext.User.Identity.IsAuthenticated;
+                return true;
+            }
         }
     }
 }
