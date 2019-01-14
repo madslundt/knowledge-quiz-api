@@ -20,6 +20,8 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(409)]
         public async Task<IActionResult> CreateUser([FromBody] AddUser.Command user)
         {
             await _mediator.Send(user);
@@ -28,6 +30,10 @@ namespace API.Controllers
         }
 
         [HttpGet, Route("{userId}")]
+        [ProducesResponseType(200, Type = typeof(GetUser.Result))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         [Authorize]
         public async Task<IActionResult> GetUser([FromRoute] Guid userId)
         {
@@ -40,6 +46,9 @@ namespace API.Controllers
         }
 
         [HttpPost, Route("signin")]
+        [ProducesResponseType(200, Type = typeof(GetUserToken.Result))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetUserByUniqueId([FromBody] GetUserToken.Query user)
         {
             var result = await _mediator.Send(user);
@@ -48,6 +57,9 @@ namespace API.Controllers
         }
 
         [HttpPost, Route("metadata")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [Authorize]
         public async Task<IActionResult> AddMetadata([FromBody] AddMetadata.Metadata metadata)
         {

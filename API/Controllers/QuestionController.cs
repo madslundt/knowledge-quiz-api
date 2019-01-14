@@ -22,6 +22,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(GetQuestions.Result))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetQuestions([FromHeader] DataModel.Models.Localization.Locale locale, [FromQuery] int limit = 20)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
@@ -37,6 +40,7 @@ namespace API.Controllers
         }
 
         [HttpPut, Route("{questionId}/mark")]
+        [ProducesResponseType(200)]
         public IActionResult MarkQuestion([FromRoute] Guid questionId)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
@@ -57,6 +61,10 @@ namespace API.Controllers
         }
 
         [HttpGet, Route("{questionId}/hint")]
+        [ProducesResponseType(200, Type = typeof(GetQuestionHint.Result))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetQuestionHint([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] Guid questionId)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
@@ -84,6 +92,10 @@ namespace API.Controllers
         }
 
         [HttpPost, Route("{questionId}/report")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> ReportQuestion([FromRoute] Guid questionId)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);

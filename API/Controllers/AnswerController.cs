@@ -21,6 +21,9 @@ namespace API.Controllers
         }
 
         [HttpPost, Route("{answerId}")]
+        [ProducesResponseType(200, Type = typeof(CheckAnswer.Result))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> AddAnswer([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] Guid answerId)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
