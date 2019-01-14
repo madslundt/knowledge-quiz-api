@@ -28,6 +28,7 @@ using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using API.Infrastructure.Identity;
+using API.Infrastructure.MessageQueue;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace API
@@ -158,6 +159,9 @@ namespace API
 
             IContainer container = new Container();
             container.Configure(config => { config.Populate(services); });
+
+            var mediator = container.GetInstance<IMediator>();
+            GlobalConfiguration.Configuration.UseMediator(mediator);
 
             metrics.ReportRunner.RunAllAsync();
 
