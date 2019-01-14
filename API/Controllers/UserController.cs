@@ -51,7 +51,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> AddMetadata([FromBody] AddMetadata.Metadata metadata)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             _mediator.Enqueue(new AddMetadata.Command
             {

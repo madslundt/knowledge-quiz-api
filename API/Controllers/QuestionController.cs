@@ -24,7 +24,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetQuestions([FromHeader] DataModel.Models.Localization.Locale locale, [FromQuery] int limit = 20)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             var result = await _mediator.Send(new GetQuestions.Query
             {
@@ -39,7 +39,7 @@ namespace API.Controllers
         [HttpPut, Route("{questionId}/mark")]
         public IActionResult MarkQuestion([FromRoute] Guid questionId)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             _mediator.Enqueue(new MarkUserQuestion.Command
             {
@@ -59,7 +59,7 @@ namespace API.Controllers
         [HttpGet, Route("{questionId}/hint")]
         public async Task<IActionResult> GetQuestionHint([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] Guid questionId)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             var result = await _mediator.Send(new GetQuestionHint.Query
             {
@@ -86,7 +86,7 @@ namespace API.Controllers
         [HttpPost, Route("{questionId}/report")]
         public async Task<IActionResult> ReportQuestion([FromRoute] Guid questionId)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             await _mediator.Send(new ReportQuestion.Command
             {

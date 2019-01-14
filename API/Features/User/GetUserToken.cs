@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using DataModel;
+using API.Infrastructure.Identity;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.User
 {
@@ -22,6 +17,7 @@ namespace API.Features.User
         public class Result
         {
             public string Token { get; set; }
+            public DateTime Expiration { get; set; }
         }
 
         public class GetUserValidator : AbstractValidator<Query>
@@ -36,46 +32,27 @@ namespace API.Features.User
 
         public class GetUserHandler : IRequestHandler<Query, Result>
         {
-            private readonly DatabaseContext _db;
+            private readonly IUserService _userService;
 
-            public GetUserHandler(DatabaseContext db)
+            public GetUserHandler(IUserService userService)
             {
-                _db = db;
+                _userService = userService;
             }
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                var userId = await Get(message.UniqueId);
+                var token = await _userService.Authenticate(message.UniqueId);
 
-                if (userId == Guid.Empty)
+                if (token is null)
                 {
                     throw new ArgumentNullException($"Could not find {nameof(message.UniqueId)} '{message.UniqueId}'");
                 }
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-
-                ClaimsIdentity identity = new ClaimsIdentity();
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId.ToString(), ClaimValueTypes.String));
-
-                var securityToken = tokenHandler.CreateJwtSecurityToken(subject: identity);
-
-                var token = tokenHandler.WriteToken(securityToken);
-
                 var result = new Result
                 {
-                    Token = token
+                    Token = token.Token,
+                    Expiration = token.Expiration
                 };
-
-                return result;
-            }
-
-            private async Task<Guid> Get(string uniqueId)
-            {
-                var query = from user in _db.Users
-                    where user.UniqueId == uniqueId
-                    select user.Id;
-
-                var result = await query.FirstOrDefaultAsync();
 
                 return result;
             }

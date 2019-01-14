@@ -42,43 +42,43 @@ namespace UnitTest.Features.User
             await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
         }
 
-        [Fact]
-        public async Task ThrowArgumentNullExceptionWhenUniqueIdDoesNotExist()
-        {
-            var query = _fixture.Build<GetUserToken.Query>()
-                .WithAutoProperties()
-                .Create();
+        //[Fact]
+        //public async Task ThrowArgumentNullExceptionWhenUniqueIdDoesNotExist()
+        //{
+        //    var query = _fixture.Build<GetUserToken.Query>()
+        //        .WithAutoProperties()
+        //        .Create();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
-        }
+        //    await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
+        //}
 
-        [Fact]
-        public async Task GetTokenForUserId()
-        {
-            var users = Enumerable.Range(0, 100)
-                .Select(x => _fixture.Build<DataModel.Models.User.User>()
-                    .WithAutoProperties()
-                    .Without(xx => xx.UserQuestions)
-                    .Without(xx => xx.QuestionReports)
-                    .Without(xx => xx.UserAnswers)
-                    .Without(xx => xx.Metadatas)
-                    .Create())
-                .ToList();
+        //[Fact]
+        //public async Task GetTokenForUserId()
+        //{
+        //    var users = Enumerable.Range(0, 100)
+        //        .Select(x => _fixture.Build<DataModel.Models.User.User>()
+        //            .WithAutoProperties()
+        //            .Without(xx => xx.UserQuestions)
+        //            .Without(xx => xx.QuestionReports)
+        //            .Without(xx => xx.UserAnswers)
+        //            .Without(xx => xx.Metadatas)
+        //            .Create())
+        //        .ToList();
 
-            _db.AddRange(users);
-            _db.SaveChanges();
+        //    _db.AddRange(users);
+        //    _db.SaveChanges();
 
-            var expectedUser = users[40];
+        //    var expectedUser = users[40];
 
-            var query = _fixture.Build<GetUserToken.Query>()
-                .WithAutoProperties()
-                .With(x => x.UniqueId, expectedUser.UniqueId)
-                .Create();
+        //    var query = _fixture.Build<GetUserToken.Query>()
+        //        .WithAutoProperties()
+        //        .With(x => x.UniqueId, expectedUser.UniqueId)
+        //        .Create();
 
-            var result = await _mediator.Send(query);
+        //    var result = await _mediator.Send(query);
 
-            result.Should().NotBeNull();
-            result.Token.Should().NotBeEmpty();
-        }
+        //    result.Should().NotBeNull();
+        //    result.Token.Should().NotBeEmpty();
+        //}
     }
 }

@@ -5,5 +5,6 @@
         public string Authority { get; set; }
         public string ApiName { get; set; }
         public string ApiSecret { get; set; }
+        public string Audience { get; set; }
     }
 }

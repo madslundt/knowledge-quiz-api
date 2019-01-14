@@ -74,7 +74,7 @@ namespace IDP
                 {
                     ClientId = "clientcredentialsclient",
                     ClientName = "Client Credentials Client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Implicit,
                     AccessTokenLifetime = 120, // 2 minutes
                     AllowOfflineAccess = true,
                     AccessTokenType = AccessTokenType.Jwt,

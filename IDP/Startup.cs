@@ -53,7 +53,7 @@ namespace IDP
                 .AddInMemoryApiResources(Config.GetApiResources()) // If using in-memory
                 .AddInMemoryClients(Config.GetClients()) // If using in-memory
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())     // If using in-memory
-                // this adds the config data from DB (clients, resources)
+                                                                                 // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = b =>

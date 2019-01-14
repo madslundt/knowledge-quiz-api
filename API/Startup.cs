@@ -25,6 +25,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using StructureMap;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Text;
+using API.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace API
 {
@@ -76,6 +80,25 @@ namespace API
             services.AddMetrics(metrics);
             services.AddMetricsReportScheduler();
 
+            // Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Knowledge API",
+                    Description = "Knowledge API v1",
+                    TermsOfService = "None",
+                    Contact = new Contact
+                    {
+                        Name = "Mads Engel Lundt",
+                        Email = "contact@elcc.dk",
+                        Url = "https://elcc.dk"
+                    }
+                });
+                c.CustomSchemaIds(x => x.FullName);
+            });
+
             // Pipeline
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MetricsProcessor<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
@@ -93,19 +116,45 @@ namespace API
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
 
             // Identity
-            var identityOptions = new Infrastructure.Identity.IdentityOptions();
-            Configuration.GetSection(nameof(Infrastructure.Identity.IdentityOptions)).Bind(identityOptions);
+            var identityOptionsSection = Configuration.GetSection(nameof(Infrastructure.Identity.IdentityOptions));
+            services.Configure<Infrastructure.Identity.IdentityOptions>(identityOptionsSection);
 
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            // configure jwt authentication
+            var identityOptions = identityOptionsSection.Get<Infrastructure.Identity.IdentityOptions>();
+            var key = Encoding.ASCII.GetBytes(identityOptions.ApiSecret);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                //.AddIdentityServerAuthentication(options =>
+                //{
+                //    options.Authority = identityOptions.Authority;
+                //    options.ApiName = identityOptions.ApiName;
+                //    options.ApiSecret = identityOptions.ApiSecret;
+                //    options.RequireHttpsMetadata = _env.IsProduction();
+                //    options.EnableCaching = true;
+                //    options.CacheDuration = TimeSpan.FromMinutes(10);
+                //})
+                .AddJwtBearer("Bearer", options =>
                 {
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+
                     options.Authority = identityOptions.Authority;
-                    options.ApiName = identityOptions.ApiName;
-                    options.ApiSecret = identityOptions.ApiSecret;
                     options.RequireHttpsMetadata = _env.IsProduction();
-                    options.EnableCaching = true;
-                    options.CacheDuration = TimeSpan.FromMinutes(10);
+
+                    options.Audience = identityOptions.Audience;
                 });
+
+            services.AddScoped<IUserService, UserService>();
 
             IContainer container = new Container();
             container.Configure(config => { config.Populate(services); });
@@ -159,6 +208,12 @@ namespace API
             app.UseMetricsAllEndpoints();
             app.UseMetricsAllMiddleware();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Knowledge API v1");
+            });
+
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
                 SchedulePollingInterval = TimeSpan.FromSeconds(30),
@@ -170,7 +225,7 @@ namespace API
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 IsReadOnlyFunc = (DashboardContext context) => true,
-                Authorization = new[] {new MyAuthorizationFilter()}
+                Authorization = new[] { new MyAuthorizationFilter() }
             });
             app.UseAuthentication();
 

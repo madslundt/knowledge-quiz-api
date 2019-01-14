@@ -23,7 +23,7 @@ namespace API.Controllers
         [HttpPost, Route("{answerId}")]
         public async Task<IActionResult> AddAnswer([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] Guid answerId)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             var result = await _mediator.Send(new CheckAnswer.Query
             {
