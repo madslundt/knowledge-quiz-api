@@ -16,6 +16,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(GetLocales.Result))]
         public async Task<IActionResult> GetLocales()
         {
             var result = await _mediator.Send(new GetLocales.Query());
