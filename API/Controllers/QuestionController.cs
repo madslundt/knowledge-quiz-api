@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using API.Features.Answer;
 using API.Features.Question;
 using API.Infrastructure.MessageQueue;
 using MediatR;
@@ -34,6 +35,30 @@ namespace API.Controllers
                 Limit = 20,
                 UserId = Guid.Parse(userId),
                 Locale = locale
+            });
+
+            return Ok(result);
+        }
+
+        [HttpPost, Route("{questionId}/answer")]
+        [ProducesResponseType(200, Type = typeof(CheckAnswer.Result))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> AddAnswer([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] CheckAnswer.AnswerRequest answer)
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+
+            var result = await _mediator.Send(new CheckAnswer.Query
+            {
+                Answer = answer,
+                Locale = locale
+            });
+
+            _mediator.Enqueue(new AddAnswer.Command
+            {
+                AnswerId = answer.AnswerId,
+                UserId = Guid.Parse(userId)
             });
 
             return Ok(result);
