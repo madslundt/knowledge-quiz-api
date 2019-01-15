@@ -35,7 +35,7 @@ namespace DataModel
                 throw new Exception("Aborted..");
             }
 
-            builder.UseSqlServer(connectionString);
+            builder.UseNpgsql(connectionString);
 
             return new DatabaseContext(builder.Options);
         }

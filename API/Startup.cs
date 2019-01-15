@@ -30,6 +30,7 @@ using System.Text;
 using API.Infrastructure.Identity;
 using API.Infrastructure.MessageQueue;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Hangfire.PostgreSql;
 
 namespace API
 {
@@ -60,10 +61,10 @@ namespace API
             services.AddMediatR(typeof(Startup));
 
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
+                options.UseNpgsql(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
             services.AddHangfire(x =>
-                x.UseSqlServerStorage(Configuration.GetConnectionString(ConnectionStringKeys.Hangfire)));
+                x.UsePostgreSqlStorage(Configuration.GetConnectionString(ConnectionStringKeys.Hangfire)));
 
             services.AddCorrelationId();
 
@@ -79,7 +80,9 @@ namespace API
                 .Build();
 
             services.AddMetrics(metrics);
-            services.AddMetricsReportScheduler();
+            services.AddMetricsTrackingMiddleware();
+            services.AddMetricsEndpoints();
+            services.AddMetricsReportingHostedService();
 
             // Swagger
             services.AddSwaggerGen(c =>
