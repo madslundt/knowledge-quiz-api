@@ -37,6 +37,7 @@ namespace API
                         builder.Report.ToInfluxDb(influxOptions);
                     })
                 .UseMetrics()
+                .UseSentry()
                 .UseStartup<Startup>()
                 .Build();
         }
