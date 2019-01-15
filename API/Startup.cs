@@ -155,8 +155,6 @@ namespace API
                     options.Audience = identityOptions.Audience;
                 });
 
-            services.AddScoped<IUserService, UserService>();
-
             IContainer container = new Container();
             container.Configure(config => { config.Populate(services); });
 
