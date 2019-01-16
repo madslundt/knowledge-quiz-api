@@ -1,11 +1,22 @@
 version: 2
 jobs:
   build:
+    branches:
+      only:
+        - master
     docker:
       - image: microsoft/dotnet:sdk
     steps:
       - checkout
-      - run: find .
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test
+      - run:
+          name: Restore packages
+          command: dotnet restore
+      - run:
+          name: Build solution
+          command: dotnet build
+      - run:
+          name: Run tests
+          command: dotnet test
+      - run:
+          name: Deploy
+          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./deploy_project.sh"
