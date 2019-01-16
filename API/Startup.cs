@@ -116,7 +116,7 @@ namespace API
                 })
                 .AddMetrics()
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
 
             // Identity
@@ -159,7 +159,7 @@ namespace API
                 });
 
             IContainer container = new Container();
-            container.Configure(config => { config.Populate(services); });
+            container.Configure(config => config.Populate(services));
 
             var mediator = container.GetInstance<IMediator>();
             GlobalConfiguration.Configuration.UseMediator(mediator);
@@ -187,14 +187,20 @@ namespace API
                 }
             }
 
+            services.AddLogging(builder => builder
+                .AddConfiguration(Configuration)
+                .AddConsole()
+                .AddDebug()
+                .AddEventSourceLogger()
+                .AddSentry());
+
             return container.GetInstance<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILoggerFactory loggerFactory)
+            IHostingEnvironment env)
         {
             app.UseCorrelationId(new CorrelationIdOptions
             {
@@ -203,9 +209,6 @@ namespace API
 
             if (env.IsDevelopment())
             {
-                loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-                loggerFactory.AddDebug();
-                loggerFactory.AddSentry();
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
