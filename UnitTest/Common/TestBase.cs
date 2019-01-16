@@ -10,7 +10,10 @@ using Hangfire;
 using Hangfire.Common;
 using Hangfire.States;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using StructureMap;
@@ -33,6 +36,8 @@ namespace UnitTest.Common
             // Services
             services.AddMediatR();
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
             services.AddMvc().AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
             services.AddAutoMapper();
 
@@ -61,6 +66,7 @@ namespace UnitTest.Common
                 cfg.For<IBackgroundJobClient>().Use(_jobClientMock.Object);
                 cfg.For<IOptions<IdentityOptions>>().Use(_identityOptionsMock.Object);
                 cfg.For<DatabaseContext>().Use(_db);
+                cfg.For(typeof(ILogger<>)).Use(typeof(NullLogger<>));
                 cfg.Populate(services);
             });
 
