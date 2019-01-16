@@ -45,7 +45,7 @@ namespace API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> AddAnswer([FromHeader] DataModel.Models.Localization.Locale locale, [FromRoute] CheckAnswer.AnswerRequest answer)
+        public async Task<IActionResult> AddAnswer([FromHeader] DataModel.Models.Localization.Locale locale, [FromBody] CheckAnswer.AnswerRequest answer)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
