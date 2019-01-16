@@ -30,6 +30,8 @@ namespace DataModel
     // -s ../API is used to point to appsettings in API application. 
     // Remember to set environment eg. 'setx ASPNETCORE_ENVIRONMENT Development'
 
+    // OBS remember to run 'create extension "uuid-ossp"' to allow GUID/UUID in Postgres
+
     public class DatabaseContext : DbContext
     {
         private static readonly Regex _keysRegex = new Regex("^(PK|FK|IX)_", RegexOptions.Compiled);
