@@ -24,7 +24,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .Without(x => x.UserId)
                             .Create();
 
@@ -35,7 +34,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenUserIdIsEmpty()
         {
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.UserId, Guid.Empty)
                             .Create();
 
@@ -46,7 +44,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionsAreNull()
         {
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .Without(x => x.Questions)
                             .Create();
 
@@ -57,7 +54,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionsAreEmpty()
         {
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.Questions, new List<API.Features.Question.MarkUserQuestion.Question>())
                             .Create();
 
@@ -68,7 +64,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionsContainEmptyId()
         {
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.Questions, new List<API.Features.Question.MarkUserQuestion.Question>
                             {
                                 new API.Features.Question.MarkUserQuestion.Question
@@ -91,7 +86,6 @@ namespace UnitTest.Features.Question
                 .ToList();
 
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.Questions, markQuestions)
                             .Create();
 
@@ -115,7 +109,6 @@ namespace UnitTest.Features.Question
                 .ToList();
 
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.Questions, markQuestions)
                             .Create();
 
@@ -138,7 +131,6 @@ namespace UnitTest.Features.Question
                 .ToList();
 
             var command = _fixture.Build<API.Features.Question.MarkUserQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.Questions, markQuestions)
                             .Create();
 

@@ -21,6 +21,14 @@ namespace API.Features.User
             public bool DoesUserExist { get; set; }
         }
 
+        public class DoesUserExistValidator : AbstractValidator<Query>
+        {
+            public DoesUserExistValidator()
+            {
+                RuleFor(query => query.UserId).NotEmpty();
+            }
+        }
+
 
         public class GetUserHandler : IRequestHandler<Query, Result>
         {

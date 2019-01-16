@@ -43,7 +43,6 @@ namespace API.Features.Question
         {
             public GetQuestionsValidator()
             {
-                RuleFor(query => query).NotNull();
                 RuleFor(query => query.UserId).NotEmpty();
                 RuleFor(query => query.Locale).IsInEnum();
                 RuleFor(query => query.Limit).InclusiveBetween(1, 50)

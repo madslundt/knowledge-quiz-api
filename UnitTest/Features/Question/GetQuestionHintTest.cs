@@ -25,7 +25,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenLocaleIsEmpty()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
-                            .WithAutoProperties()
                             .Without(x => x.Locale)
                             .Create();
 
@@ -36,7 +35,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionIdIsEmpty()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, Guid.Empty)
                             .Create();
 
@@ -47,7 +45,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionIdIsNull()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
-                            .WithAutoProperties()
                             .Without(x => x.QuestionId)
                             .Create();
 
@@ -58,7 +55,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowArgumentNullExceptionWhenQuestionIdDoesNotExist()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
-                            .WithAutoProperties()
                             .Create();
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
@@ -82,7 +78,6 @@ namespace UnitTest.Features.Question
             var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).FirstOrDefault(ql => ql.QuestionId == questions.First().Id && ql.Localization.Locale == locale && ql.QuestionType == QuestionType.Hint);
 
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, expectedQuestionLocalization.QuestionId)
                             .With(x => x.Locale, locale)
                             .Create();

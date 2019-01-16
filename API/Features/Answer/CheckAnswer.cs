@@ -40,7 +40,6 @@ namespace API.Features.Answer
         {
             public CheckAnswerValidator()
             {
-                RuleFor(query => query).NotNull();
                 RuleFor(query => query.Answer).NotNull();
                 RuleFor(query => query.Locale).IsInEnum();
                 RuleFor(query => query.Answer.QuestionId).NotEmpty().When(q => q.Answer != null);

@@ -23,7 +23,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIsNull()
         {
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .Without(x => x.Answer)
                             .Create();
 
@@ -34,12 +33,10 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIdIsNull()
         {
             var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .Without(x => x.AnswerId)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Answer, answer)
                             .Create();
 
@@ -50,12 +47,10 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIdIsEmpty()
         {
             var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .With(x => x.AnswerId, Guid.Empty)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Answer, answer)
                             .Create();
 
@@ -66,12 +61,10 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenQuestionIdIsNull()
         {
             var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .Without(x => x.QuestionId)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Answer, answer)
                             .Create();
 
@@ -82,12 +75,10 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenQuestionIdIsEmpty()
         {
             var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, Guid.Empty)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Answer, answer)
                             .Create();
 
@@ -98,11 +89,9 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenLocaleIsEmpty()
         {
             var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .Without(x => x.Locale)
                             .With(x => x.Answer, answer)
                             .Create();
@@ -114,11 +103,9 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIdDoesNotExist()
         {
             var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Answer, answer)
                             .Create();
 
@@ -129,7 +116,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIdDoesNotBelongToAQuestion()
         {
             var answer = _fixture.Build<DataModel.Models.Answer.Answer>()
-                            .WithAutoProperties()
                             .Without(x => x.Question)
                             .Without(x => x.QuestionId)
                             .Without(x => x.UserAnswers)
@@ -140,7 +126,6 @@ namespace UnitTest.Features.Answer
             _db.SaveChanges();
 
             var answerRequest = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, answer.QuestionId)
                             .With(x => x.AnswerId, answer.Id)
                             .Create();
@@ -156,7 +141,6 @@ namespace UnitTest.Features.Answer
         public async Task GetCorrectAnswer()
         {
             var question = _fixture.Build<DataModel.Models.Question.Question>()
-                            .WithAutoProperties()
                             .Without(x => x.UserQuestions)
                             .Without(x => x.Answers)
                             .Without(x => x.QuestionLocalizations)
@@ -164,13 +148,12 @@ namespace UnitTest.Features.Answer
                             .Create();
 
             var answers = Enumerable.Range(0, 10)
-                .Select(x => _fixture.Build<DataModel.Models.Answer.Answer>()
-                            .WithAutoProperties()
-                            .With(xx => xx.QuestionId, question.Id)
-                            .With(xx => xx.IsCorrect, false)
-                            .Without(xx => xx.Question)
-                            .Without(xx => xx.UserAnswers)
-                            .Without(xx => xx.AnswerLocalizations)
+                .Select(_ => _fixture.Build<DataModel.Models.Answer.Answer>()
+                            .With(x => x.QuestionId, question.Id)
+                            .With(x => x.IsCorrect, false)
+                            .Without(x => x.Question)
+                            .Without(x => x.UserAnswers)
+                            .Without(x => x.AnswerLocalizations)
                             .Create())
                 .ToList();
 
@@ -183,7 +166,6 @@ namespace UnitTest.Features.Answer
             var expectedAnswer = answers.First();
 
             var answerRequest = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, expectedAnswer.QuestionId)
                             .With(x => x.AnswerId, expectedAnswer.Id)
                             .Create();
@@ -204,7 +186,6 @@ namespace UnitTest.Features.Answer
         public async Task GetAnotherCorrectAnswer()
         {
             var question = _fixture.Build<DataModel.Models.Question.Question>()
-                            .WithAutoProperties()
                             .Without(x => x.UserQuestions)
                             .Without(x => x.Answers)
                             .Without(x => x.QuestionLocalizations)
@@ -212,13 +193,12 @@ namespace UnitTest.Features.Answer
                             .Create();
 
             var answers = Enumerable.Range(0, 10)
-                .Select(x => _fixture.Build<DataModel.Models.Answer.Answer>()
-                            .WithAutoProperties()
-                            .With(xx => xx.QuestionId, question.Id)
-                            .With(xx => xx.IsCorrect, true)
-                            .Without(xx => xx.Question)
-                            .Without(xx => xx.UserAnswers)
-                            .Without(xx => xx.AnswerLocalizations)
+                .Select(_ => _fixture.Build<DataModel.Models.Answer.Answer>()
+                            .With(x => x.QuestionId, question.Id)
+                            .With(x => x.IsCorrect, true)
+                            .Without(x => x.Question)
+                            .Without(x => x.UserAnswers)
+                            .Without(x => x.AnswerLocalizations)
                             .Create())
                 .ToList();
 
@@ -231,7 +211,6 @@ namespace UnitTest.Features.Answer
             var expectedAnswer = answers.First();
 
             var answerRequest = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, expectedAnswer.QuestionId)
                             .With(x => x.AnswerId, expectedAnswer.Id)
                             .Create();

@@ -19,7 +19,6 @@ namespace API.Features.User
         {
             public AddUserValidator()
             {
-                RuleFor(command => command).NotNull();
                 RuleFor(command => command.UniqueId).NotEmpty();
             }
         }

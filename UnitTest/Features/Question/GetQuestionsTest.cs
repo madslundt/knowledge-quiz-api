@@ -3,7 +3,6 @@ using FluentValidation;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DataModel.Models.User;
 using FluentAssertions;
 using UnitTest.Common;
 using Xunit;
@@ -24,7 +23,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                            .WithAutoProperties()
                             .Without(x => x.UserId)
                             .Create();
 
@@ -35,7 +33,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenUserIdIsEmpty()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                            .WithAutoProperties()
                             .With(x => x.UserId, Guid.Empty)
                             .Create();
 
@@ -46,7 +43,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenLocaleIsEmpty()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                            .WithAutoProperties()
                             .Without(x => x.Locale)
                             .Create();
 
@@ -57,7 +53,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenLimitIsGreaterThan50()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Limit, 51)
                             .Create();
 
@@ -68,7 +63,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenLimitIsLessThan1()
         {
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                            .WithAutoProperties()
                             .With(x => x.Limit, 0)
                             .Create();
 
@@ -79,12 +73,11 @@ namespace UnitTest.Features.Question
         public async Task GetAListOfQuestions()
         {
             var questions = Enumerable.Range(0, 50)
-                .Select(x => _fixture.Build<DataModel.Models.Question.Question>()
-                            .WithAutoProperties()
-                            .Without(xx => xx.UserQuestions)
-                            .With(xx => xx.Answers, _seedData.GetAnswers())
-                            .Without(xx => xx.QuestionLocalizations)
-                            .Without(xx => xx.QuestionReports)
+                .Select(_ => _fixture.Build<DataModel.Models.Question.Question>()
+                            .Without(x => x.UserQuestions)
+                            .With(x => x.Answers, _seedData.GetAnswers())
+                            .Without(x => x.QuestionLocalizations)
+                            .Without(x => x.QuestionReports)
                             .Create())
                 .ToList();
 
@@ -93,7 +86,6 @@ namespace UnitTest.Features.Question
             var questionLocalizations = _seedData.GetQuestionLocalizations(questions, localizations.ToList());
 
             var user = _fixture.Build<DataModel.Models.User.User>()
-                .WithAutoProperties()
                 .Without(x => x.UserAnswers)
                 .Without(x => x.UserQuestions)
                 .Without(x => x.Metadatas)
@@ -113,7 +105,6 @@ namespace UnitTest.Features.Question
             _db.SaveChanges();
 
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                .WithAutoProperties()
                 .With(x => x.UserId, user.Id)
                 .With(x => x.Locale, DataModel.Models.Localization.Locale.en_US)
                 .Without(x => x.Limit)
@@ -134,12 +125,11 @@ namespace UnitTest.Features.Question
         public async Task GetAListWithOneQuestionsWhenLimitIs1()
         {
             var questions = Enumerable.Range(0, 50)
-                .Select(x => _fixture.Build<DataModel.Models.Question.Question>()
-                            .WithAutoProperties()
-                            .Without(xx => xx.UserQuestions)
-                            .With(xx => xx.Answers, _seedData.GetAnswers())
-                            .Without(xx => xx.QuestionLocalizations)
-                            .Without(xx => xx.QuestionReports)
+                .Select(_ => _fixture.Build<DataModel.Models.Question.Question>()
+                            .Without(x => x.UserQuestions)
+                            .With(x => x.Answers, _seedData.GetAnswers())
+                            .Without(x => x.QuestionLocalizations)
+                            .Without(x => x.QuestionReports)
                             .Create())
                 .ToList();
 
@@ -148,7 +138,6 @@ namespace UnitTest.Features.Question
             var questionLocalizations = _seedData.GetQuestionLocalizations(questions, localizations.ToList());
 
             var user = _fixture.Build<DataModel.Models.User.User>()
-                .WithAutoProperties()
                 .Without(x => x.UserAnswers)
                 .Without(x => x.UserQuestions)
                 .Without(x => x.Metadatas)
@@ -168,7 +157,6 @@ namespace UnitTest.Features.Question
             _db.SaveChanges();
 
             var query = _fixture.Build<API.Features.Question.GetQuestions.Query>()
-                .WithAutoProperties()
                 .With(x => x.UserId, user.Id)
                 .With(x => x.Locale, DataModel.Models.Localization.Locale.en_US)
                 .With(x => x.Limit, 1)

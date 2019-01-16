@@ -28,7 +28,6 @@ namespace API.Features.Question
         {
             public GetQuestionHintValidator()
             {
-                RuleFor(query => query).NotNull();
                 RuleFor(query => query.Locale).IsInEnum();
                 RuleFor(query => query.QuestionId).NotEmpty();
             }

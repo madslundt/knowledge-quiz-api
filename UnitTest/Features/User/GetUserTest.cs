@@ -26,7 +26,6 @@ namespace UnitTest.Features.User
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var query = _fixture.Build<GetUser.Query>()
-                .WithAutoProperties()
                 .Without(x => x.UserId)
                 .Create();
 
@@ -37,7 +36,6 @@ namespace UnitTest.Features.User
         public async Task ThrowValidationExceptionWhenUserIdIsEmpty()
         {
             var query = _fixture.Build<GetUser.Query>()
-                .WithAutoProperties()
                 .With(x => x.UserId, Guid.Empty)
                 .Create();
 
@@ -48,7 +46,6 @@ namespace UnitTest.Features.User
         public async Task ThrowArgumentNullExceptionWhenUserIdDoesNotExist()
         {
             var query = _fixture.Build<GetUser.Query>()
-                .WithAutoProperties()
                 .Create();
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
@@ -59,7 +56,6 @@ namespace UnitTest.Features.User
         {
             var users = Enumerable.Range(0, 100)
                 .Select(x => _fixture.Build<DataModel.Models.User.User>()
-                    .WithAutoProperties()
                     .Without(xx => xx.UserQuestions)
                     .Without(xx => xx.QuestionReports)
                     .Without(xx => xx.UserAnswers)
@@ -71,7 +67,6 @@ namespace UnitTest.Features.User
             _db.SaveChanges();
 
             var query = _fixture.Build<GetUser.Query>()
-                .WithAutoProperties()
                 .With(x => x.UserId, users[40].Id)
                 .Create();
 

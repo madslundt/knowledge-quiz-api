@@ -22,8 +22,8 @@ namespace API.Features.Answer
         {
             public AddAnswerValidator()
             {
-                RuleFor(question => question.AnswerId).NotEmpty();
-                RuleFor(question => question.UserId).NotEmpty();
+                RuleFor(command => command.AnswerId).NotEmpty();
+                RuleFor(command => command.UserId).NotEmpty();
             }
         }
 

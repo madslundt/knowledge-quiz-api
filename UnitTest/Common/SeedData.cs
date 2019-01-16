@@ -36,7 +36,6 @@ namespace UnitTest.Common
                         var localization = entry.Value[index];
 
                         var questionLocalization = _fixture.Build<QuestionLocalization>()
-                            .WithAutoProperties()
                             .Without(x => x.QuestionTypeReference)
                             .With(x => x.QuestionId, question.Id)
                             .With(x => x.Question, question)
@@ -61,7 +60,6 @@ namespace UnitTest.Common
             {
                 localizations.AddRange(Enumerable.Range(0, limit)
                     .Select(_ => _fixture.Build<Localization>()
-                        .WithAutoProperties()
                         .Without(x => x.AnswerLocalizations)
                         .Without(x => x.QuestionLocalizations)
                         .Without(x => x.LocaleReference)
@@ -77,7 +75,6 @@ namespace UnitTest.Common
         {
             var answers = Enumerable.Range(0, limit)
                 .Select(_ => _fixture.Build<Answer>()
-                            .WithAutoProperties()
                             .Without(x => x.QuestionId)
                             .Without(x => x.Question)
                             .Without(x => x.UserAnswers)
@@ -92,7 +89,6 @@ namespace UnitTest.Common
         {
             var questions = Enumerable.Range(0, limit)
                 .Select(_ => _fixture.Build<Question>()
-                            .WithAutoProperties()
                             .Without(x => x.UserQuestions)
                             .Without(x => x.QuestionLocalizations)
                             .Without(x => x.QuestionReports)
@@ -115,7 +111,6 @@ namespace UnitTest.Common
                 var localization = localizations[index];
 
                 var answerLocalization = _fixture.Build<AnswerLocalization>()
-                        .WithAutoProperties()
                         .With(x => x.AnswerId, answer.Id)
                         .With(x => x.Answer, answer)
                         .With(x => x.LocalizationId, localization.Id)

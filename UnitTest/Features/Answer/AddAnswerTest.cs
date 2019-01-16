@@ -23,7 +23,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIdIsNull()
         {
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .Without(x => x.AnswerId)
                             .Create();
 
@@ -34,7 +33,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenAnswerIdIsEmpty()
         {
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .With(x => x.AnswerId, Guid.Empty)
                             .Create();
 
@@ -45,7 +43,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .Without(x => x.UserId)
                             .Create();
 
@@ -56,7 +53,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowValidationExceptionWhenUserIdIsEmpty()
         {
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .With(x => x.UserId, Guid.Empty)
                             .Create();
 
@@ -67,7 +63,6 @@ namespace UnitTest.Features.Answer
         public async Task ThrowArgumentNullExceptionWhenThereAreNoAnswers()
         {
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .Create();
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
@@ -78,7 +73,6 @@ namespace UnitTest.Features.Answer
         {
             var answers = Enumerable.Range(0, 10)
                 .Select(x => _fixture.Build<DataModel.Models.Answer.Answer>()
-                            .WithAutoProperties()
                             .Without(xx => xx.UserAnswers)
                             .Without(xx => xx.Question)
                             .Without(xx => xx.AnswerLocalizations)
@@ -89,7 +83,6 @@ namespace UnitTest.Features.Answer
             _db.SaveChanges();
 
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .Create();
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
@@ -100,7 +93,6 @@ namespace UnitTest.Features.Answer
         {
             var answers = Enumerable.Range(0, 10)
                 .Select(x => _fixture.Build<DataModel.Models.Answer.Answer>()
-                            .WithAutoProperties()
                             .Without(xx => xx.UserAnswers)
                             .Without(xx => xx.Question)
                             .Without(xx => xx.AnswerLocalizations)
@@ -113,7 +105,6 @@ namespace UnitTest.Features.Answer
             var expectedAnswer = answers.First();
 
             var command = _fixture.Build<API.Features.Answer.AddAnswer.Command>()
-                            .WithAutoProperties()
                             .With(x => x.AnswerId, expectedAnswer.Id)
                             .Create();
 

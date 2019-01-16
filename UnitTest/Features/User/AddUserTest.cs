@@ -26,7 +26,6 @@ namespace UnitTest.Features.User
         public async Task ThrowValidationExceptionWhenUniqueIdIsEmpty()
         {
             var command = _fixture.Build<AddUser.Command>()
-                .WithAutoProperties()
                 .With(x => x.UniqueId, string.Empty)
                 .Create();
 
@@ -37,7 +36,6 @@ namespace UnitTest.Features.User
         public async Task AddUserThatDoesNotExist()
         {
             var command = _fixture.Build<AddUser.Command>()
-                .WithAutoProperties()
                 .Create();
 
             await _mediator.Send(command);
@@ -63,7 +61,6 @@ namespace UnitTest.Features.User
             _db.SaveChanges();
 
             var command = _fixture.Build<AddUser.Command>()
-                .WithAutoProperties()
                 .With(x => x.UniqueId, uniqueId)
                 .Create();
 

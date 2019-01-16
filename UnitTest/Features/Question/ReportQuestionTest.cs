@@ -12,10 +12,17 @@ namespace UnitTest.Features.Question
     public class ReportQuestionTest : TestBase
     {
         [Fact]
+        public async Task ThrowArgumentNullExceptionWhenCommandIsNull()
+        {
+            var command = (API.Features.Question.ReportQuestion.Command)null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
+        }
+
+        [Fact]
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var command = _fixture.Build<API.Features.Question.ReportQuestion.Command>()
-                            .WithAutoProperties()
                             .Without(x => x.UserId)
                             .Create();
 
@@ -25,7 +32,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenUserIdIsEmpty()
         {
             var command = _fixture.Build<API.Features.Question.ReportQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.UserId, Guid.Empty)
                             .Create();
 
@@ -35,7 +41,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionIdIsNull()
         {
             var command = _fixture.Build<API.Features.Question.ReportQuestion.Command>()
-                            .WithAutoProperties()
                             .Without(x => x.QuestionId)
                             .Create();
 
@@ -46,7 +51,6 @@ namespace UnitTest.Features.Question
         public async Task ThrowValidationExceptionWhenQuestionIdIsEmpty()
         {
             var command = _fixture.Build<API.Features.Question.ReportQuestion.Command>()
-                            .WithAutoProperties()
                             .With(x => x.QuestionId, Guid.Empty)
                             .Create();
 
@@ -54,18 +58,9 @@ namespace UnitTest.Features.Question
         }
 
         [Fact]
-        public async Task ThrowArgumentNullExceptionWhenCommandIsNull()
-        {
-            var command = (API.Features.Question.ReportQuestion.Command) null;
-
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(command));
-        }
-
-        [Fact]
         public async Task ReportQuestionId()
         {
             var command = _fixture.Build<API.Features.Question.ReportQuestion.Command>()
-                            .WithAutoProperties()
                             .Create();
 
             await _mediator.Send(command);

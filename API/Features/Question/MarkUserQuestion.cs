@@ -27,7 +27,6 @@ namespace API.Features.Question
         {
             public MarkUserQuestionValidator()
             {
-                RuleFor(command => command).NotNull();
                 RuleFor(command => command.UserId).NotEmpty();
                 RuleFor(command => command.Questions).NotEmpty();
                 RuleForEach(command => command.Questions).Must(question => question.QuestionId != Guid.Empty);

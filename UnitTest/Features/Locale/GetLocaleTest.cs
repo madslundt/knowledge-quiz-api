@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using FluentValidation;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,13 +12,20 @@ namespace UnitTest.Features.Locale
     public class GetLocaleTest : TestBase
     {
         [Fact]
+        public async Task ThrowArgumentNullExceptionWhenLocaleIsNull()
+        {
+            var query = (API.Features.Locale.GetLocales.Query)null;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send(query));
+        }
+
+        [Fact]
         public async Task ReturnListOfLocalesAvailable()
         {
             var count = Enum.GetNames(typeof(DataModel.Models.Localization.Locale)).Length;
 
             var locales = Enumerable.Range(0, count)
                 .Select(x => _fixture.Build<DataModel.Models.Localization.LocaleReference>()
-                            .WithAutoProperties()
                             .Create())
                 .ToList();
 

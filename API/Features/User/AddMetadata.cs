@@ -34,7 +34,6 @@ namespace API.Features.User
         {
             public AddMetadataValidator()
             {
-                RuleFor(command => command).NotNull();
                 RuleFor(command => command.UserId).NotEmpty();
                 RuleFor(command => command.Metadata).NotNull();
                 RuleFor(command => command.Metadata.Metadatas).NotEmpty();

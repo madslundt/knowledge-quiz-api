@@ -22,7 +22,6 @@ namespace API.Features.Question
         {
             public ReportQuestionValidator()
             {
-                RuleFor(command => command).NotNull();
                 RuleFor(command => command.UserId).NotEmpty();
                 RuleFor(command => command.QuestionId).NotEmpty();
             }

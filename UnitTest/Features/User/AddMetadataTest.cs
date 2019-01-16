@@ -26,7 +26,6 @@ namespace UnitTest.Features.User
         public async Task ThrowValidationExceptionWhenUserIdIsEmpty()
         {
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .With(x => x.UserId, Guid.Empty)
                 .Create();
 
@@ -37,7 +36,6 @@ namespace UnitTest.Features.User
         public async Task ThrowValidationExceptionWhenUserIdIsNull()
         {
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .Without(x => x.UserId)
                 .Create();
 
@@ -48,7 +46,6 @@ namespace UnitTest.Features.User
         public async Task ThrowValidationExceptionWhenMetadataIsEmpty()
         {
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .With(x => x.Metadata, new AddMetadata.Metadata
                 {
                     Metadatas = new List<AddMetadata.MetadataItem>()
@@ -62,7 +59,6 @@ namespace UnitTest.Features.User
         public async Task ThrowNullReferenceExceptionWhenMetadataIsNull()
         {
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .Without(x => x.Metadata)
                 .Create();
 
@@ -84,7 +80,6 @@ namespace UnitTest.Features.User
             }
 
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .With(x => x.Metadata, new AddMetadata.Metadata
                 {
                     Metadatas = metadatas
@@ -131,7 +126,6 @@ namespace UnitTest.Features.User
             }
 
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .With(x => x.Metadata, new AddMetadata.Metadata
                 {
                     Metadatas = metadatas
@@ -168,7 +162,6 @@ namespace UnitTest.Features.User
             }
 
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .With(x => x.Metadata, new AddMetadata.Metadata
                 {
                     Metadatas = metadatas
@@ -194,7 +187,6 @@ namespace UnitTest.Features.User
             }
 
             var command = _fixture.Build<AddMetadata.Command>()
-                .WithAutoProperties()
                 .With(x => x.Metadata, new AddMetadata.Metadata
                 {
                     Metadatas = metadatas
