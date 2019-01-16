@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataModel.Models.User
@@ -21,7 +19,6 @@ namespace DataModel.Models.User
                 b.HasAlternateKey(k => k.Name);
 
                 b.HasKey(k => k.Id);
-                b.ToTable("MetadataTypeReferences");
 
                 b.HasData(GetSeedData());
             });

@@ -22,7 +22,6 @@ namespace DataModel.Models.User
                 b.HasAlternateKey(k => k.UniqueId);
 
                 b.HasKey(k => k.Id);
-                b.ToTable("Users");
             });
         }
     }

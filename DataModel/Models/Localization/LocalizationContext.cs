@@ -30,7 +30,6 @@ namespace DataModel.Models.Localization
                     .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("Localizations");
             });
         }
     }

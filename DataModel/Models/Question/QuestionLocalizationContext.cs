@@ -34,7 +34,6 @@ namespace DataModel.Models.Question
                     .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("QuestionLocalizations");
             });
         }
     }

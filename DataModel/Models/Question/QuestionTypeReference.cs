@@ -1,4 +1,4 @@
-﻿namespace DataModel.Models
+﻿namespace DataModel.Models.Question
 {
     public class QuestionTypeReference
     {

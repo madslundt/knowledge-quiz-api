@@ -27,7 +27,6 @@ namespace DataModel.Models.User
                     .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("UserAnswers");
             });
         }
     }

@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataModel.Models.User
 {
@@ -33,7 +30,6 @@ namespace DataModel.Models.User
                     .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("UserQuestions");
             });
         }
     }

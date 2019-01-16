@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +19,6 @@ namespace DataModel.Models.Question
                 b.HasAlternateKey(k => k.Name);
 
                 b.HasKey(k => k.Id);
-                b.ToTable("QuestionTypeReferences");
 
                 b.HasData(GetSeedData());
             });

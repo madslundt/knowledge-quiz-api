@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190115233700_Init")]
+    [Migration("20190116223026_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,60 +24,77 @@ namespace DataModel.Migrations
             modelBuilder.Entity("DataModel.Models.Answer.Answer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnUpdate();
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnName("created");
 
-                    b.Property<bool>("IsCorrect");
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnName("is_correct");
 
-                    b.Property<Guid>("QuestionId");
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnName("question_id");
 
-                    b.Property<DateTime?>("Updated");
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_answers");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("QuestionId")
+                        .HasName("ix_answers_question_id");
 
-                    b.ToTable("Answers");
+                    b.ToTable("answers");
                 });
 
             modelBuilder.Entity("DataModel.Models.Answer.AnswerLocalization", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-                    b.Property<Guid>("AnswerId");
+                    b.Property<Guid>("AnswerId")
+                        .HasColumnName("answer_id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<Guid>("LocalizationId");
+                    b.Property<Guid>("LocalizationId")
+                        .HasColumnName("localization_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_answer_localizations");
 
                     b.HasAlternateKey("AnswerId", "LocalizationId");
 
-                    b.HasIndex("LocalizationId");
+                    b.HasIndex("LocalizationId")
+                        .HasName("ix_answer_localizations_localization_id");
 
-                    b.ToTable("AnswerLocalizations");
+                    b.ToTable("answer_localizations");
                 });
 
             modelBuilder.Entity("DataModel.Models.Localization.LocaleReference", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnName("id");
 
                     b.Property<string>("Code")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("code");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_locale_references");
 
                     b.HasAlternateKey("Code");
 
-                    b.ToTable("LocaleReferences");
+                    b.ToTable("locale_references");
 
                     b.HasData(
                         new
@@ -97,104 +114,132 @@ namespace DataModel.Migrations
             modelBuilder.Entity("DataModel.Models.Localization.Localization", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<int>("Locale");
+                    b.Property<int>("Locale")
+                        .HasColumnName("locale");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("text");
 
                     b.Property<DateTime?>("Updated")
-                        .ValueGeneratedOnUpdate();
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_localizations");
 
                     b.HasAlternateKey("Text", "Locale");
 
                     b.HasIndex("Locale");
 
-                    b.ToTable("Localizations");
+                    b.ToTable("localizations");
                 });
 
             modelBuilder.Entity("DataModel.Models.Question.Question", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<string>("ImageUrl");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnName("image_url");
 
                     b.Property<DateTime?>("Updated")
-                        .ValueGeneratedOnUpdate();
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_questions");
 
-                    b.ToTable("Questions");
+                    b.ToTable("questions");
                 });
 
             modelBuilder.Entity("DataModel.Models.Question.QuestionLocalization", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<Guid>("LocalizationId");
+                    b.Property<Guid>("LocalizationId")
+                        .HasColumnName("localization_id");
 
-                    b.Property<Guid>("QuestionId");
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnName("question_id");
 
-                    b.Property<int>("QuestionType");
+                    b.Property<int>("QuestionType")
+                        .HasColumnName("question_type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_question_localizations");
 
                     b.HasAlternateKey("QuestionId", "LocalizationId", "QuestionType");
 
-                    b.HasIndex("LocalizationId");
+                    b.HasIndex("LocalizationId")
+                        .HasName("ix_question_localizations_localization_id");
 
                     b.HasIndex("QuestionType");
 
-                    b.ToTable("QuestionLocalizations");
+                    b.ToTable("question_localizations");
                 });
 
             modelBuilder.Entity("DataModel.Models.Question.QuestionReport", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<Guid>("QuestionId");
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnName("question_id");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_question_reports");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("QuestionId")
+                        .HasName("ix_question_reports_question_id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasName("ix_question_reports_user_id");
 
-                    b.ToTable("QuestionReports");
+                    b.ToTable("question_reports");
                 });
 
             modelBuilder.Entity("DataModel.Models.QuestionTypeReference", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnName("id");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_question_type_references");
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("QuestionTypeReferences");
+                    b.ToTable("question_type_references");
 
                     b.HasData(
                         new
@@ -216,16 +261,19 @@ namespace DataModel.Migrations
 
             modelBuilder.Entity("DataModel.Models.User.MetadataTypeReference", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnName("id");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_metadata_type_references");
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("MetadataTypeReferences");
+                    b.ToTable("metadata_type_references");
 
                     b.HasData(
                         new
@@ -293,90 +341,115 @@ namespace DataModel.Migrations
             modelBuilder.Entity("DataModel.Models.User.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
                     b.Property<string>("UniqueId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("unique_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_users");
 
                     b.HasAlternateKey("UniqueId");
 
                     b.HasIndex("UniqueId")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("DataModel.Models.User.UserAnswer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-                    b.Property<Guid>("AnswerId");
+                    b.Property<Guid>("AnswerId")
+                        .HasColumnName("answer_id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_user_answers");
 
-                    b.HasIndex("AnswerId");
+                    b.HasIndex("AnswerId")
+                        .HasName("ix_user_answers_answer_id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasName("ix_user_answers_user_id");
 
-                    b.ToTable("UserAnswers");
+                    b.ToTable("user_answers");
                 });
 
             modelBuilder.Entity("DataModel.Models.User.UserMetadata", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<int>("MetadataType");
+                    b.Property<int>("MetadataType")
+                        .HasColumnName("metadata_type");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnName("user_id");
 
                     b.Property<string>("Value")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_user_metadatas");
 
                     b.HasAlternateKey("UserId", "MetadataType", "Value");
 
                     b.HasIndex("MetadataType");
 
-                    b.ToTable("UserMetadatas");
+                    b.ToTable("user_metadatas");
                 });
 
             modelBuilder.Entity("DataModel.Models.User.UserQuestion", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("created");
 
-                    b.Property<bool>("HintUsed");
+                    b.Property<bool>("HintUsed")
+                        .HasColumnName("hint_used");
 
-                    b.Property<Guid>("QuestionId");
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnName("question_id");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_user_questions");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("QuestionId")
+                        .HasName("ix_user_questions_question_id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasName("ix_user_questions_user_id");
 
-                    b.ToTable("UserQuestions");
+                    b.ToTable("user_questions");
                 });
 
             modelBuilder.Entity("DataModel.Models.Answer.Answer", b =>
@@ -384,6 +457,7 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Question.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
+                        .HasConstraintName("fk_answers_questions_question_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -392,11 +466,13 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Answer.Answer", "Answer")
                         .WithMany("AnswerLocalizations")
                         .HasForeignKey("AnswerId")
+                        .HasConstraintName("fk_answer_localizations_answers_answer_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.Localization.Localization", "Localization")
                         .WithMany("AnswerLocalizations")
                         .HasForeignKey("LocalizationId")
+                        .HasConstraintName("fk_answer_localizations_localizations_localization_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -405,6 +481,7 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Localization.LocaleReference", "LocaleReference")
                         .WithMany()
                         .HasForeignKey("Locale")
+                        .HasConstraintName("fk_localizations_locale_references_locale_reference_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -413,16 +490,19 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Localization.Localization", "Localization")
                         .WithMany("QuestionLocalizations")
                         .HasForeignKey("LocalizationId")
+                        .HasConstraintName("fk_question_localizations_localizations_localization_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.Question.Question", "Question")
                         .WithMany("QuestionLocalizations")
                         .HasForeignKey("QuestionId")
+                        .HasConstraintName("fk_question_localizations_questions_question_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.QuestionTypeReference", "QuestionTypeReference")
                         .WithMany()
                         .HasForeignKey("QuestionType")
+                        .HasConstraintName("fk_question_localizations_question_type_references_question_type~")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -431,11 +511,13 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Question.Question", "Question")
                         .WithMany("QuestionReports")
                         .HasForeignKey("QuestionId")
+                        .HasConstraintName("fk_question_reports_questions_question_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.User.User", "User")
                         .WithMany("QuestionReports")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("fk_question_reports_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -444,11 +526,13 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Answer.Answer", "Answer")
                         .WithMany("UserAnswers")
                         .HasForeignKey("AnswerId")
+                        .HasConstraintName("fk_user_answers_answers_answer_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.User.User", "User")
                         .WithMany("UserAnswers")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_answers_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -457,11 +541,13 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.User.MetadataTypeReference", "MetadataTypeReference")
                         .WithMany()
                         .HasForeignKey("MetadataType")
+                        .HasConstraintName("fk_user_metadatas_metadata_type_references_metadata_type_refer~")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.User.User", "User")
                         .WithMany("Metadatas")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_metadatas_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -470,11 +556,13 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Models.Question.Question", "Question")
                         .WithMany("UserQuestions")
                         .HasForeignKey("QuestionId")
+                        .HasConstraintName("fk_user_questions_questions_question_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataModel.Models.User.User", "User")
                         .WithMany("UserQuestions")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_questions_users_user_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

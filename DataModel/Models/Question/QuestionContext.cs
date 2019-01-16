@@ -22,7 +22,6 @@ namespace DataModel.Models.Question
                 b.Property(p => p.ImageUrl);
                 
                 b.HasKey(k => k.Id);
-                b.ToTable("Questions");
             });
         }
     }

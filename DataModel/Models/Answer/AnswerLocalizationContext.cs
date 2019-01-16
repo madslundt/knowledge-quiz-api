@@ -29,7 +29,6 @@ namespace DataModel.Models.Answer
                     .IsRequired();
 
                 b.HasKey(k => k.Id);
-                b.ToTable("AnswerLocalizations");
             });
         }
     }
