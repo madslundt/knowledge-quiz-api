@@ -49,9 +49,12 @@ namespace API.Controllers
         [ProducesResponseType(200, Type = typeof(GetUserToken.Result))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUserByUniqueId([FromBody] GetUserToken.Query user)
+        public async Task<IActionResult> GetUserToken([FromBody] GetUserToken.UserRequest user)
         {
-            var result = await _mediator.Send(user);
+            var result = await _mediator.Send(new GetUserToken.Query
+            {
+                User = user
+            });
 
             return Ok(result);
         }

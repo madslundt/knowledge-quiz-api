@@ -15,12 +15,12 @@ namespace API.Features.Answer
         public class Query : IRequest<Result>
         {
             public AnswerRequest Answer { get; set; }
+            public Guid QuestionId { get; set; }
             public DataModel.Models.Localization.Locale Locale { get; set; }
         }
 
         public class AnswerRequest
         {
-            public Guid QuestionId { get; set; }
             public Guid AnswerId { get; set; }
         }
 
@@ -42,7 +42,7 @@ namespace API.Features.Answer
             {
                 RuleFor(query => query.Answer).NotNull();
                 RuleFor(query => query.Locale).IsInEnum();
-                RuleFor(query => query.Answer.QuestionId).NotEmpty().When(q => q.Answer != null);
+                RuleFor(query => query.QuestionId).NotEmpty();
                 RuleFor(query => query.Answer.AnswerId).NotEmpty().When(q => q.Answer != null);
             }
         }
@@ -59,14 +59,14 @@ namespace API.Features.Answer
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                var correctAnswers = await GetCorrectAnswers(message.Answer.QuestionId);
+                var correctAnswers = await GetCorrectAnswers(message.QuestionId);
 
                 if (correctAnswers.Count == 0)
                 {
-                    throw new ValidationException($"No correct answers for {nameof(message.Answer.QuestionId)} '{message.Answer.QuestionId}'");
+                    throw new ValidationException($"No correct answers for {nameof(message.QuestionId)} '{message.QuestionId}'");
                 }
 
-                var text = await GetQuestionText(message.Answer.QuestionId, message.Locale);
+                var text = await GetQuestionText(message.QuestionId, message.Locale);
 
                 var result = new Result
                 {

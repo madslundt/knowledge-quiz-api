@@ -60,12 +60,8 @@ namespace UnitTest.Features.Answer
         [Fact]
         public async Task ThrowValidationExceptionWhenQuestionIdIsNull()
         {
-            var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .Without(x => x.QuestionId)
-                            .Create();
-
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .With(x => x.Answer, answer)
+                            .Without(x => x.QuestionId)
                             .Create();
 
             await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
@@ -74,12 +70,8 @@ namespace UnitTest.Features.Answer
         [Fact]
         public async Task ThrowValidationExceptionWhenQuestionIdIsEmpty()
         {
-            var answer = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .With(x => x.QuestionId, Guid.Empty)
-                            .Create();
-
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
-                            .With(x => x.Answer, answer)
+                            .With(x => x.QuestionId, Guid.Empty)
                             .Create();
 
             await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
@@ -126,12 +118,12 @@ namespace UnitTest.Features.Answer
             _db.SaveChanges();
 
             var answerRequest = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .With(x => x.QuestionId, answer.QuestionId)
                             .With(x => x.AnswerId, answer.Id)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
                             .With(x => x.Answer, answerRequest)
+                            .With(x => x.QuestionId, answer.QuestionId)
                             .Create();
 
             await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
@@ -166,12 +158,12 @@ namespace UnitTest.Features.Answer
             var expectedAnswer = answers.First();
 
             var answerRequest = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .With(x => x.QuestionId, expectedAnswer.QuestionId)
                             .With(x => x.AnswerId, expectedAnswer.Id)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
                             .With(x => x.Answer, answerRequest)
+                            .With(x => x.QuestionId, expectedAnswer.QuestionId)
                             .Create();
 
             var result = await _mediator.Send(query);
@@ -211,12 +203,12 @@ namespace UnitTest.Features.Answer
             var expectedAnswer = answers.First();
 
             var answerRequest = _fixture.Build<API.Features.Answer.CheckAnswer.AnswerRequest>()
-                            .With(x => x.QuestionId, expectedAnswer.QuestionId)
                             .With(x => x.AnswerId, expectedAnswer.Id)
                             .Create();
 
             var query = _fixture.Build<API.Features.Answer.CheckAnswer.Query>()
                             .With(x => x.Answer, answerRequest)
+                            .With(x => x.QuestionId, expectedAnswer.QuestionId)
                             .Create();
 
             var result = await _mediator.Send(query);
