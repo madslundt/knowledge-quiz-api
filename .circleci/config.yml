@@ -19,4 +19,4 @@ jobs:
           command: dotnet test
       - run:
           name: Deploy
-          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "nohup ./deploy_project.sh &"
+          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./deploy_project.sh"
