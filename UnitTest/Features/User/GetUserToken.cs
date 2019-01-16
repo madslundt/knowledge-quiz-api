@@ -59,6 +59,7 @@ namespace UnitTest.Features.User
 
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
+                .With(x => x.User, user)
                 .With(x => x.TimeSpan, new TimeSpan(2, 0, 0))
                 .Create();
 
