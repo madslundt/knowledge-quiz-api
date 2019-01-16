@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DataModel;
+using DataModel.Models.Question;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -83,7 +84,7 @@ namespace API.Features.Answer
                 var query = from answer in _db.Answers
                             join questionLocalization in _db.QuestionLocalizations on answer.QuestionId equals questionLocalization.QuestionId
                             join localization in _db.Localizations on questionLocalization.LocalizationId equals localization.Id
-                            where answer.QuestionId == questionId && questionLocalization.QuestionType == DataModel.Models.QuestionType.Final
+                            where answer.QuestionId == questionId && questionLocalization.QuestionType == QuestionType.Final
                             where localization.Locale == locale
                             select localization.Text;
 

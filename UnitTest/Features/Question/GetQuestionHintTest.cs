@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DataModel.Models;
+using DataModel.Models.Question;
 using UnitTest.Common;
 using Xunit;
 

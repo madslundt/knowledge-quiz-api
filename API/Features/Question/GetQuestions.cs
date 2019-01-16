@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DataModel.Models;
+using DataModel.Models.Question;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
