@@ -39,7 +39,7 @@ namespace API.Features.User
             {
                 RuleFor(query => query.User).NotNull();
                 RuleFor(query => query.User.UniqueId).NotEmpty().When(q => q.User != null);
-                RuleFor(query => query.TimeSpan).GreaterThanOrEqualTo(new TimeSpan(1, 0, 0)).LessThanOrEqualTo(new TimeSpan(7, 0, 0));
+                RuleFor(query => query.TimeSpan).GreaterThanOrEqualTo(new TimeSpan(1, 0, 0)).LessThanOrEqualTo(new TimeSpan(7, 0, 0, 0));
             }
         }
 
