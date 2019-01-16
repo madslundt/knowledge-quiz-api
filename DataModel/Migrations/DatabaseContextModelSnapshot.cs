@@ -3,8 +3,8 @@ using System;
 using DataModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataModel.Migrations
 {
@@ -15,9 +15,9 @@ namespace DataModel.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("DataModel.Models.Answer.Answer", b =>
                 {
@@ -78,9 +78,18 @@ namespace DataModel.Migrations
                     b.ToTable("LocaleReferences");
 
                     b.HasData(
-                        new { Id = 1, Code = "en_US", Name = "English" },
-                        new { Id = 2, Code = "da_DK", Name = "Dansk" }
-                    );
+                        new
+                        {
+                            Id = 1,
+                            Code = "en_US",
+                            Name = "English"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "da_DK",
+                            Name = "Dansk"
+                        });
                 });
 
             modelBuilder.Entity("DataModel.Models.Localization.Localization", b =>
@@ -186,10 +195,21 @@ namespace DataModel.Migrations
                     b.ToTable("QuestionTypeReferences");
 
                     b.HasData(
-                        new { Id = 1, Name = "Question" },
-                        new { Id = 2, Name = "Hint" },
-                        new { Id = 3, Name = "Final" }
-                    );
+                        new
+                        {
+                            Id = 1,
+                            Name = "Question"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Hint"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Final"
+                        });
                 });
 
             modelBuilder.Entity("DataModel.Models.User.MetadataTypeReference", b =>
@@ -206,19 +226,66 @@ namespace DataModel.Migrations
                     b.ToTable("MetadataTypeReferences");
 
                     b.HasData(
-                        new { Id = 1, Name = "Brand" },
-                        new { Id = 2, Name = "BuildNumber" },
-                        new { Id = 3, Name = "DeviceCountry" },
-                        new { Id = 4, Name = "DeviceLocale" },
-                        new { Id = 5, Name = "DeviceName" },
-                        new { Id = 6, Name = "MacAddress" },
-                        new { Id = 7, Name = "Manufacturer" },
-                        new { Id = 8, Name = "SystemName" },
-                        new { Id = 9, Name = "SystemVersion" },
-                        new { Id = 10, Name = "Timezone" },
-                        new { Id = 11, Name = "UniqueId" },
-                        new { Id = 12, Name = "Version" }
-                    );
+                        new
+                        {
+                            Id = 1,
+                            Name = "Brand"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BuildNumber"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "DeviceCountry"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "DeviceLocale"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "DeviceName"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "MacAddress"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Manufacturer"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "SystemName"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "SystemVersion"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Timezone"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "UniqueId"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Version"
+                        });
                 });
 
             modelBuilder.Entity("DataModel.Models.User.User", b =>
