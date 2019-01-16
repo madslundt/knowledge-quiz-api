@@ -18,8 +18,13 @@ namespace API.Features.User
     {
         public class Query : IRequest<Result>
         {
-            public string UniqueId { get; set; }
+            public UserRequest User { get; set; }
             public TimeSpan TimeSpan { get; set; } = new TimeSpan(1, 0, 0, 0);
+        }
+
+        public class UserRequest
+        {
+            public string UniqueId { get; set; }
         }
 
         public class Result
@@ -33,7 +38,8 @@ namespace API.Features.User
             public GetUserValidator()
             {
                 RuleFor(query => query).NotNull();
-                RuleFor(query => query.UniqueId).NotEmpty();
+                RuleFor(query => query.User).NotNull();
+                RuleFor(query => query.User.UniqueId).NotEmpty().When(q => q.User != null);
                 RuleFor(query => query.TimeSpan).GreaterThanOrEqualTo(new TimeSpan(1, 0, 0)).LessThanOrEqualTo(new TimeSpan(7, 0, 0));
             }
         }
@@ -52,11 +58,11 @@ namespace API.Features.User
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                var user = await GetUser(message.UniqueId);
+                var user = await GetUser(message.User.UniqueId);
 
                 if (user is null)
                 {
-                    throw new ArgumentNullException($"Could not find {nameof(message.UniqueId)} '{message.UniqueId}'");
+                    throw new ArgumentNullException($"Could not find {nameof(message.User.UniqueId)} '{message.User.UniqueId}'");
                 }
 
                 var tokenHandler = new JwtSecurityTokenHandler();

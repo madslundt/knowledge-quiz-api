@@ -21,11 +21,28 @@ namespace UnitTest.Features.User
         }
 
         [Fact]
-        public async Task ThrowValidationExceptionWhenUniqueIdIsNull()
+        public async Task ThrowValidationExceptionWhenUserIsNull()
         {
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
-                .Without(x => x.UniqueId)
+                .Without(x => x.User)
+                .With(x => x.TimeSpan, new TimeSpan(2, 0, 0))
+                .Create();
+
+            await Assert.ThrowsAsync<ValidationException>(() => _mediator.Send(query));
+        }
+
+        [Fact]
+        public async Task ThrowValidationExceptionWhenUniqueIdIsNull()
+        {
+            var user = _fixture.Build<GetUserToken.UserRequest>()
+                        .WithAutoProperties()
+                        .Without(x => x.UniqueId)
+                        .Create();
+
+            var query = _fixture.Build<GetUserToken.Query>()
+                .WithAutoProperties()
+                .With(x => x.User, user)
                 .With(x => x.TimeSpan, new TimeSpan(2, 0, 0))
                 .Create();
 
@@ -37,7 +54,6 @@ namespace UnitTest.Features.User
         {
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
-                .With(x => x.UniqueId, string.Empty)
                 .With(x => x.TimeSpan, new TimeSpan(2, 0, 0))
                 .Create();
 
@@ -47,9 +63,12 @@ namespace UnitTest.Features.User
         [Fact]
         public async Task ThrowValidationExceptionWhenTimeSpanIsLessThan1Hour()
         {
+            var user = _fixture.Build<GetUserToken.UserRequest>()
+                        .WithAutoProperties()
+                        .Create();
+
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
-                .With(x => x.UniqueId, string.Empty)
                 .With(x => x.TimeSpan, new TimeSpan(0, 59, 59))
                 .Create();
 
@@ -61,7 +80,6 @@ namespace UnitTest.Features.User
         {
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
-                .With(x => x.UniqueId, string.Empty)
                 .With(x => x.TimeSpan, new TimeSpan(7, 0, 0, 0, 1))
                 .Create();
 
@@ -97,9 +115,14 @@ namespace UnitTest.Features.User
 
             var expectedUser = users[40];
 
+            var user = _fixture.Build<GetUserToken.UserRequest>()
+                        .WithAutoProperties()
+                        .With(x => x.UniqueId, expectedUser.UniqueId)
+                        .Create();
+
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
-                .With(x => x.UniqueId, expectedUser.UniqueId)
+                .With(x => x.User, user)
                 .With(x => x.TimeSpan, new TimeSpan(2, 0, 0))
                 .Create();
 
