@@ -16,7 +16,7 @@ namespace API.Infrastructure.Pipeline
 
         public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Handling {typeof(TRequest).FullName}", new
+            _logger.LogDebug($"Handling {typeof(TRequest).FullName}", new
             {
                 Request = request
             });

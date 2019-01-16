@@ -15,26 +15,19 @@ namespace API.Infrastructure.Filter
     {
         private HttpStatusCode MapStatusCode(Exception ex)
         {
-            // Status Codes
-            if (ex is ArgumentNullException)
+            switch (ex)
             {
-                return HttpStatusCode.NotFound;
-            }
-            else if (ex is ValidationException)
-            {
-                return HttpStatusCode.BadRequest;
-            }
-            else if (ex is UnauthorizedAccessException)
-            {
-                return HttpStatusCode.Unauthorized;
-            }
-            else if (ex is DuplicateNameException)
-            {
-                return HttpStatusCode.Conflict;
-            }
-            else
-            {
-                return HttpStatusCode.InternalServerError;
+                // Status Codes
+                case ArgumentNullException _:
+                    return HttpStatusCode.NotFound;
+                case ValidationException _:
+                    return HttpStatusCode.BadRequest;
+                case UnauthorizedAccessException _:
+                    return HttpStatusCode.Unauthorized;
+                case DuplicateNameException _:
+                    return HttpStatusCode.Conflict;
+                default:
+                    return HttpStatusCode.InternalServerError;
             }
         }
 
@@ -89,6 +82,10 @@ namespace API.Infrastructure.Filter
             if (statusCode >= 500)
             {
                 _logger.LogCritical(logTitle, logError);
+            }
+            else if (statusCode == 404 || statusCode == 401)
+            {
+                _logger.LogInformation(logTitle, logError);
             }
             else
             {
