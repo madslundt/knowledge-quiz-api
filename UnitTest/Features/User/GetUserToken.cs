@@ -52,6 +52,11 @@ namespace UnitTest.Features.User
         [Fact]
         public async Task ThrowValidationExceptionWhenUniqueIdIsEmpty()
         {
+            var user = _fixture.Build<GetUserToken.UserRequest>()
+                        .WithAutoProperties()
+                        .With(x => x.UniqueId, string.Empty)
+                        .Create();
+
             var query = _fixture.Build<GetUserToken.Query>()
                 .WithAutoProperties()
                 .With(x => x.TimeSpan, new TimeSpan(2, 0, 0))
