@@ -98,18 +98,18 @@ namespace API.Features.Question
                     join answerLocalization in _db.AnswerLocalizations on answer.Id equals answerLocalization.AnswerId
                     join aLocalization in _db.Localizations on answerLocalization.LocalizationId equals aLocalization.Id
 
-                    where !skipQuestionIds.Contains(question.Id) && qLocalization.Locale == locale &&
-                          aLocalization.Locale == locale && questionLocalization.QuestionType == QuestionType.Question
+                    where !skipQuestionIds.Contains(question.Id) && qLocalization.LocaleId == locale &&
+                          aLocalization.LocaleId == locale && questionLocalization.QuestionType == QuestionType.Question
 
                     orderby Guid.NewGuid()
 
-                    group new Answer {Id = answer.Id, Text = aLocalization.Text } by new {question, qLocalization}
+                    group new Answer {Id = answer.Id, Text = aLocalization.Translation } by new {question, qLocalization}
                     into gr
 
                     select new Question
                     {
                         Id = gr.Key.question.Id,
-                        Text = gr.Key.qLocalization.Text,
+                        Text = gr.Key.qLocalization.Translation,
                         ImageUrl = gr.Key.question.ImageUrl,
                         Answers = gr.ToList()
                     };

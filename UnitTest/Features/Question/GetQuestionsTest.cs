@@ -113,12 +113,12 @@ namespace UnitTest.Features.Question
             var result = await _mediator.Send(query);
 
             var currentLocaleLocalizations =
-                localizations.Where(localization => localization.Locale == query.Locale).ToList();
+                localizations.Where(localization => localization.LocaleId == query.Locale).ToList();
 
             result.Questions.Should().NotBeEmpty();
             result.Questions.Count.Should().Be(20);
             result.Questions.Should().OnlyContain(question =>
-                currentLocaleLocalizations.Any(localization => localization.Text == question.Text));
+                currentLocaleLocalizations.Any(localization => localization.Translation == question.Text));
         }
 
         [Fact]
@@ -165,12 +165,12 @@ namespace UnitTest.Features.Question
             var result = await _mediator.Send(query);
 
             var currentLocaleLocalizations =
-                localizations.Where(localization => localization.Locale == query.Locale).ToList();
+                localizations.Where(localization => localization.LocaleId == query.Locale).ToList();
 
             result.Questions.Should().NotBeEmpty();
             result.Questions.Count.Should().Be(1);
             result.Questions.Should().OnlyContain(question =>
-                currentLocaleLocalizations.Any(localization => localization.Text == question.Text));
+                currentLocaleLocalizations.Any(localization => localization.Translation == question.Text));
         }
     }
 }

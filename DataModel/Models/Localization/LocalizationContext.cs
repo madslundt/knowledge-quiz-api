@@ -19,14 +19,14 @@ namespace DataModel.Models.Localization
                 b.Property(p => p.Updated)
                     .ValueGeneratedOnUpdate();
 
-                b.Property(p => p.Text)
+                b.Property(p => p.Translation)
                     .IsRequired();
 
-                b.HasAlternateKey(k => new { Value = k.Text, k.Locale });
+                b.HasAlternateKey(k => new { Value = k.Translation, Locale = k.LocaleId });
 
                 b.HasOne(r => r.LocaleReference)
                     .WithMany()
-                    .HasForeignKey(fk => fk.Locale)
+                    .HasForeignKey(fk => fk.LocaleId)
                     .IsRequired();
 
                 b.HasKey(k => k.Id);

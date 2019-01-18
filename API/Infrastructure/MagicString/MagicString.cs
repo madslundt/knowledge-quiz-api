@@ -7,6 +7,6 @@ namespace API.Infrastructure.MagicString
 {
     public class MagicString
     {
-        public const string HEADER_LOCALE = "Locale";
+        public const string HEADER_LOCALE = "LocaleId";
     }
 }

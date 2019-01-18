@@ -23,7 +23,7 @@ namespace UnitTest.Common
             var result = new List<QuestionLocalization>();
 
             var localizationsGroupByLanguage =
-                localizations.GroupBy(l => l.Locale).ToDictionary(k => k.Key, v => v.ToList());
+                localizations.GroupBy(l => l.LocaleId).ToDictionary(k => k.Key, v => v.ToList());
 
             var random = new Random();
             foreach (var question in questions)
@@ -63,7 +63,7 @@ namespace UnitTest.Common
                         .Without(x => x.AnswerLocalizations)
                         .Without(x => x.QuestionLocalizations)
                         .Without(x => x.LocaleReference)
-                        .With(x => x.Locale, Enum.Parse<Locale>(l))
+                        .With(x => x.LocaleId, Enum.Parse<Locale>(l))
                         .Create())
                     .OrderBy(_ => Guid.NewGuid()).ToList());
             }

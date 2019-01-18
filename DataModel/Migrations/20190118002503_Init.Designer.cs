@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190116223026_Init")]
+    [Migration("20190118002503_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,12 +121,12 @@ namespace DataModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("created");
 
-                    b.Property<int>("Locale")
-                        .HasColumnName("locale");
+                    b.Property<int>("LocaleId")
+                        .HasColumnName("locale_id");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("Translation")
                         .IsRequired()
-                        .HasColumnName("text");
+                        .HasColumnName("translation");
 
                     b.Property<DateTime?>("Updated")
                         .ValueGeneratedOnUpdate()
@@ -135,9 +135,9 @@ namespace DataModel.Migrations
                     b.HasKey("Id")
                         .HasName("pk_localizations");
 
-                    b.HasAlternateKey("Text", "Locale");
+                    b.HasAlternateKey("Translation", "LocaleId");
 
-                    b.HasIndex("Locale");
+                    b.HasIndex("LocaleId");
 
                     b.ToTable("localizations");
                 });
@@ -225,7 +225,7 @@ namespace DataModel.Migrations
                     b.ToTable("question_reports");
                 });
 
-            modelBuilder.Entity("DataModel.Models.QuestionTypeReference", b =>
+            modelBuilder.Entity("DataModel.Models.Question.QuestionTypeReference", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnName("id");
@@ -480,7 +480,7 @@ namespace DataModel.Migrations
                 {
                     b.HasOne("DataModel.Models.Localization.LocaleReference", "LocaleReference")
                         .WithMany()
-                        .HasForeignKey("Locale")
+                        .HasForeignKey("LocaleId")
                         .HasConstraintName("fk_localizations_locale_references_locale_reference_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -499,7 +499,7 @@ namespace DataModel.Migrations
                         .HasConstraintName("fk_question_localizations_questions_question_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DataModel.Models.QuestionTypeReference", "QuestionTypeReference")
+                    b.HasOne("DataModel.Models.Question.QuestionTypeReference", "QuestionTypeReference")
                         .WithMany()
                         .HasForeignKey("QuestionType")
                         .HasConstraintName("fk_question_localizations_question_type_references_question_type~")

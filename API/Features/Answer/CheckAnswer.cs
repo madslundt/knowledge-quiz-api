@@ -85,8 +85,8 @@ namespace API.Features.Answer
                             join questionLocalization in _db.QuestionLocalizations on answer.QuestionId equals questionLocalization.QuestionId
                             join localization in _db.Localizations on questionLocalization.LocalizationId equals localization.Id
                             where answer.QuestionId == questionId && questionLocalization.QuestionType == QuestionType.Final
-                            where localization.Locale == locale
-                            select localization.Text;
+                            where localization.LocaleId == locale
+                            select localization.Translation;
 
                 var result = await query.FirstOrDefaultAsync();
 

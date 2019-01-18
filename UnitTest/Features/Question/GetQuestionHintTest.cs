@@ -75,8 +75,8 @@ namespace UnitTest.Features.Question
             _db.QuestionLocalizations.AddRange(questionLocalizations);
             _db.SaveChanges();
 
-            var locale = localizations.First().Locale;
-            var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).FirstOrDefault(ql => ql.QuestionId == questions.First().Id && ql.Localization.Locale == locale && ql.QuestionType == QuestionType.Hint);
+            var locale = localizations.First().LocaleId;
+            var expectedQuestionLocalization = _db.QuestionLocalizations.Include(ql => ql.Localization).FirstOrDefault(ql => ql.QuestionId == questions.First().Id && ql.Localization.LocaleId == locale && ql.QuestionType == QuestionType.Hint);
 
             var query = _fixture.Build<API.Features.Question.GetQuestionHint.Query>()
                             .With(x => x.QuestionId, expectedQuestionLocalization.QuestionId)
@@ -86,7 +86,7 @@ namespace UnitTest.Features.Question
             var result = await _mediator.Send(query);
 
             result.Should().NotBeNull();
-            result.Text.Should().Be(expectedQuestionLocalization.Localization.Text);
+            result.Text.Should().Be(expectedQuestionLocalization.Localization.Translation);
         }
     }
 }

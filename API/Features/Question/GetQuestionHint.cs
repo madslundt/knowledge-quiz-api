@@ -65,8 +65,8 @@ namespace API.Features.Question
             {
                 var query = from questionLocalization in _db.QuestionLocalizations
                     join localization in _db.Localizations on questionLocalization.LocalizationId equals localization.Id
-                    where questionLocalization.QuestionId == questionId && localization.Locale == locale && questionLocalization.QuestionType == QuestionType.Hint
-                    select localization.Text;
+                    where questionLocalization.QuestionId == questionId && localization.LocaleId == locale && questionLocalization.QuestionType == QuestionType.Hint
+                    select localization.Translation;
 
                 var result = await query.FirstOrDefaultAsync();
 

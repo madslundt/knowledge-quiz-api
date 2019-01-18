@@ -82,16 +82,16 @@ namespace DataModel.Migrations
                     id = table.Column<Guid>(nullable: false),
                     created = table.Column<DateTime>(nullable: false),
                     updated = table.Column<DateTime>(nullable: true),
-                    text = table.Column<string>(nullable: false),
-                    locale = table.Column<int>(nullable: false)
+                    translation = table.Column<string>(nullable: false),
+                    locale_id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_localizations", x => x.id);
-                    table.UniqueConstraint("AK_localizations_text_locale", x => new { x.text, x.locale });
+                    table.UniqueConstraint("AK_localizations_translation_locale_id", x => new { x.translation, x.locale_id });
                     table.ForeignKey(
                         name: "fk_localizations_locale_references_locale_reference_id",
-                        column: x => x.locale,
+                        column: x => x.locale_id,
                         principalTable: "locale_references",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -335,9 +335,9 @@ namespace DataModel.Migrations
                 column: "question_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_localizations_locale",
+                name: "IX_localizations_locale_id",
                 table: "localizations",
-                column: "locale");
+                column: "locale_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_question_localizations_localization_id",

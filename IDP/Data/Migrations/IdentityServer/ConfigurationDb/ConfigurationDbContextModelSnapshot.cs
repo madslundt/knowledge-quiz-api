@@ -137,7 +137,7 @@ namespace IDP.Data.Migrations.IdentityServer.ConfigurationDb
                     b.Property<string>("Type")
                         .HasMaxLength(250);
 
-                    b.Property<string>("Text")
+                    b.Property<string>("Translation")
                         .HasMaxLength(2000);
 
                     b.HasKey("Id");
@@ -254,7 +254,7 @@ namespace IDP.Data.Migrations.IdentityServer.ConfigurationDb
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.Property<string>("Text")
+                    b.Property<string>("Translation")
                         .IsRequired()
                         .HasMaxLength(250);
 
@@ -358,7 +358,7 @@ namespace IDP.Data.Migrations.IdentityServer.ConfigurationDb
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.Property<string>("Text")
+                    b.Property<string>("Translation")
                         .IsRequired()
                         .HasMaxLength(2000);
 
@@ -426,7 +426,7 @@ namespace IDP.Data.Migrations.IdentityServer.ConfigurationDb
                     b.Property<string>("Type")
                         .HasMaxLength(250);
 
-                    b.Property<string>("Text")
+                    b.Property<string>("Translation")
                         .IsRequired()
                         .HasMaxLength(2000);
 
