@@ -31,7 +31,7 @@ jobs:
             docker build -t knowledgeapi:$TAG .
             docker save -o docker-image/knowledgeapi.tar knowledgeapi:$TAG
       - persist_to_workspace:
-           root: .
+           root: workspace
            paths:
              - docker-image
 
@@ -42,19 +42,19 @@ jobs:
       - checkout
       - setup_remote_docker
       - attach_workspace:
-          at: workspace
+          at: /tmp/workspace
       - run:
           name: Load Docker image
-          command: docker load --input workspace/docker-image/knowledgeapi.tar
+          command: docker load --input /tmp/workspace/docker-image/knowledgeapi.tar
       - run: 
           name: Deploy Docker image
-          command: scp workspace/docker-image/api.tar $DROPLET_USER$DROPLET_IP:/home/circleci/images -oStrictHostKeyChecking=no -v
+          command: scp /tmp/workspace/docker-image/api.tar $DROPLET_USER$DROPLET_IP:/home/circleci/images -oStrictHostKeyChecking=no -v
       - run:
           name: Start Docker image
           command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./start_project.sh"
 
 workflows:
-  version: 2
+  version: 2.1
   build-deploy:
     jobs:
       - build:
