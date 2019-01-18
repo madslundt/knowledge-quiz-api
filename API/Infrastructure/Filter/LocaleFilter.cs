@@ -5,7 +5,7 @@ namespace API.Infrastructure.Filter
 {
     public class LocaleFilterAttribute : Attribute, IResourceFilter
     {
-        private const DataModel.Models.Localization.Locale DEFAULT_LOCALE = DataModel.Models.Localization.Locale.en_US;
+        private const DataModel.Models.Localization.Locale DefaultLocale = DataModel.Models.Localization.Locale.en_US;
 
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
@@ -18,7 +18,7 @@ namespace API.Infrastructure.Filter
 
             if (string.IsNullOrWhiteSpace(locale) || !Enum.TryParse<DataModel.Models.Localization.Locale>(locale, true, out _))
             {
-                context.HttpContext.Request.Headers[MagicString.MagicString.HEADER_LOCALE] = DEFAULT_LOCALE.ToString();
+                context.HttpContext.Request.Headers[MagicString.MagicString.HEADER_LOCALE] = DefaultLocale.ToString();
             }
         }
     }

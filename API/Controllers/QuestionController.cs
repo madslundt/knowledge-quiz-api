@@ -32,7 +32,7 @@ namespace API.Controllers
 
             var result = await _mediator.Send(new GetQuestions.Query
             {
-                Limit = 20,
+                Limit = limit,
                 UserId = Guid.Parse(userId),
                 Locale = locale
             });
