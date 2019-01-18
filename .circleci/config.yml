@@ -1,9 +1,6 @@
 version: 2
 jobs:
   build:
-    branches:
-      only:
-        - master
     docker:
       - image: microsoft/dotnet:sdk
     steps:
@@ -56,3 +53,17 @@ jobs:
           name: Start Docker image
           command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./start_project.sh"
 
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
