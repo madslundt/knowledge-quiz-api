@@ -1,0 +1,67 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: microsoft/dotnet:sdk
+    steps:
+      - checkout
+      - run:
+          name: Restore packages
+          command: dotnet restore
+      - run:
+          name: Build solution
+          command: dotnet build
+      - run:
+          name: Run tests
+          command: dotnet test
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run:
+          name: Build Docker image
+          command: |
+            TAG=0.1.$CIRCLE_BUILD_NUM-$CIRCLE_SHA1
+            docker build -t knowledgeapi:$TAG .
+            mkdir docker-image
+            docker save -o docker-image/knowledgeapi.tar knowledgeapi:$TAG
+      - persist_to_workspace:
+           root: .
+           paths:
+             - docker-image
+
+  deploy:
+    docker:
+      - image: circleci/python:3.6.1
+    steps:
+      - checkout
+      - setup_remote_docker
+      - attach_workspace:
+          at: workspace
+      - run: 
+          name: Deploy Docker image
+          command: scp -oStrictHostKeyChecking=no -v workspace/docker-image/knowledgeapi.tar $DROPLET_USER@$DROPLET_IP:/home/circleci/images
+      - run:
+          name: Start Docker image
+          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./start_project.sh"
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
