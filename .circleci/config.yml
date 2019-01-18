@@ -46,7 +46,7 @@ jobs:
           at: workspace
       - run: 
           name: Deploy Docker image
-          command: scp workspace/docker-image/knowledgeapi.tar $DROPLET_USER@$DROPLET_IP:/home/circleci/images
+          command: scp -oStrictHostKeyChecking=no -v workspace/docker-image/knowledgeapi.tar $DROPLET_USER@$DROPLET_IP:/home/circleci/images
       - run:
           name: Start Docker image
           command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./start_project.sh"
