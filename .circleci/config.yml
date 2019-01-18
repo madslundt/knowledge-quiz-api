@@ -54,7 +54,7 @@ jobs:
           command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./start_project.sh"
 
 workflows:
-  version: 2.1
+  version: 2
   build-deploy:
     jobs:
       - build:
