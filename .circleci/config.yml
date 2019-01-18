@@ -17,6 +17,8 @@ jobs:
       - run:
           name: Run tests
           command: dotnet test
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Install Docker client
           command: |
