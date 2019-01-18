@@ -28,14 +28,12 @@ jobs:
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             mv /tmp/docker/* /usr/bin
       - run:
-          name: Build Docker image
+          name: Build and deploy Docker image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM-CIRCLE_SHA1
             docker build -t knowledgeapi:$TAG .
-            docker save -o knowledgeapi.tar knowledgeapi:$TAG
+            docker save knowledgeapi:$TAG | gzip | pv | ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP 'gunzip | docker load'
       - run:
-          name: Push Docker image
-          command: scp knowledgeapi.tar $DROPLET_USER@DROPLET_IP:/home/circleci/images -oStrictHostKeyChecking=no -v
-      - run:
-          name: Deploy
+          name: Start Docker image
           command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "./start_project.sh"
+
