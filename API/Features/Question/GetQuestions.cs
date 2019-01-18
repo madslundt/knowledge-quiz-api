@@ -111,7 +111,7 @@ namespace API.Features.Question
                         Id = gr.Key.question.Id,
                         Text = gr.Key.qLocalization.Translation,
                         ImageUrl = gr.Key.question.ImageUrl,
-                        Answers = gr.ToList()
+                        Answers = gr.OrderBy(_ => Guid.NewGuid()).ToList()
                     };
 
                 var sql = query.ToString();
