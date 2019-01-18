@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            TAG=0.1.$CIRCLE_BUILD_NUM-CIRCLE_SHA1
+            TAG=0.1.$CIRCLE_BUILD_NUM-$CIRCLE_SHA1
             docker build -t knowledgeapi:$TAG .
             docker save -o docker-image/knowledgeapi.tar knowledgeapi:$TAG
       - persist_to_workspace:
@@ -43,9 +43,6 @@ jobs:
       - setup_remote_docker
       - attach_workspace:
           at: /tmp/workspace
-      - run:
-          name: Load Docker image
-          command: docker load --input /tmp/workspace/docker-image/knowledgeapi.tar
       - run: 
           name: Deploy Docker image
           command: scp /tmp/workspace/docker-image/api.tar $DROPLET_USER$DROPLET_IP:/home/circleci/images -oStrictHostKeyChecking=no -v
