@@ -32,7 +32,7 @@ jobs:
             mkdir docker-image
             docker save -o docker-image/knowledgeapi.tar knowledgeapi:$TAG
       - persist_to_workspace:
-           root: workspace
+           root: .
            paths:
              - docker-image
 
