@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
-using DataModel;
-using DataModel.Models;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
+using IdentityServerWithAspNetIdentity.Models;
+using IDP.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +40,17 @@ namespace IDP
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             var builder = services.AddIdentityServer(options =>
                 {
@@ -53,6 +63,9 @@ namespace IDP
                 .AddInMemoryApiResources(Config.GetApiResources()) // If using in-memory
                 .AddInMemoryClients(Config.GetClients()) // If using in-memory
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())     // If using in-memory
+                .AddDeveloperSigningCredential()
+                .AddInMemoryPersistedGrants()
+                .AddAspNetIdentity<ApplicationUser>()
                                                                                  // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options =>
                 {
@@ -91,8 +104,13 @@ namespace IDP
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
-            
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
             app.UseIdentityServer();
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();

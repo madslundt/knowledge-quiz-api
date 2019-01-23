@@ -11,7 +11,7 @@ namespace DataModel.Models.User
 
         public string Value { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.UtcNow;
 
         public Guid UserId { get; set; }
         public User User { get; set; }

@@ -31,6 +31,8 @@ using API.Infrastructure.Identity;
 using API.Infrastructure.MessageQueue;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API
 {
@@ -113,11 +115,18 @@ namespace API
                 {
                     opt.Filters.Add(typeof(ExceptionFilter));
                     opt.Filters.Add(typeof(LocaleFilterAttribute));
+
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    opt.Filters.Add(new AuthorizeFilter(policy)); //global authorize filter
                 })
                 .AddMetrics()
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+
+            services.AddAuthorization();
 
             // Identity
             var identityOptionsSection = Configuration.GetSection(nameof(Infrastructure.Identity.IdentityOptions));
@@ -128,34 +137,18 @@ namespace API
             var key = Encoding.ASCII.GetBytes(identityOptions.ApiSecret);
 
             services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                //.AddIdentityServerAuthentication(options =>
-                //{
-                //    options.Authority = identityOptions.Authority;
-                //    options.ApiName = identityOptions.ApiName;
-                //    options.ApiSecret = identityOptions.ApiSecret;
-                //    options.RequireHttpsMetadata = _env.IsProduction();
-                //    options.EnableCaching = true;
-                //    options.CacheDuration = TimeSpan.FromMinutes(10);
-                //})
-                .AddJwtBearer("Bearer", options =>
                 {
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddIdentityServerAuthentication(options =>
+                {
                     options.Authority = identityOptions.Authority;
+                    options.ApiName = identityOptions.ApiName;
+                    options.ApiSecret = identityOptions.ApiSecret;
                     options.RequireHttpsMetadata = _env.IsProduction();
-
-                    options.Audience = identityOptions.Audience;
+                    options.EnableCaching = true;
+                    options.CacheDuration = TimeSpan.FromMinutes(10);
                 });
 
             IContainer container = new Container();
@@ -186,6 +179,17 @@ namespace API
                         $"Cannot create instance of controller {controllerType.FullName}, it is missing some services");
                 }
             }
+
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5100")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             services.AddLogging(builder => builder
                 .AddConfiguration(Configuration)
@@ -236,6 +240,7 @@ namespace API
                 IsReadOnlyFunc = (DashboardContext context) => true,
                 Authorization = new[] { new MyAuthorizationFilter() }
             });
+            app.UseCors("default");
             app.UseAuthentication();
 
             app.UseMvc();

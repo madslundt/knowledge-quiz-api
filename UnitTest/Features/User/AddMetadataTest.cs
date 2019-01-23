@@ -176,6 +176,7 @@ namespace UnitTest.Features.User
         {
             // Since inmemory db does not check for foreign keys this can be done without creating the reference table
             var metadatas = new List<AddMetadata.MetadataItem>();
+            var now = DateTime.UtcNow;
 
             for (int i = 0; i < 10; i++)
             {
@@ -197,6 +198,7 @@ namespace UnitTest.Features.User
 
             var actualMetadatas = _db.UserMetadatas.ToList();
             actualMetadatas.Should().NotBeEmpty();
+            actualMetadatas.First().Created.Should().BeOnOrAfter(now);
             actualMetadatas.Count.Should().Be(metadatas.Count);
             actualMetadatas.Should().OnlyContain(actualMetadata =>
                 actualMetadata.UserId == command.UserId && actualMetadata.MetadataType.ToString() == metadatas.First().Key);
