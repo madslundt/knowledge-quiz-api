@@ -115,11 +115,6 @@ namespace API
                 {
                     opt.Filters.Add(typeof(ExceptionFilter));
                     opt.Filters.Add(typeof(LocaleFilterAttribute));
-
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    opt.Filters.Add(new AuthorizeFilter(policy)); //global authorize filter
                 })
                 .AddMetrics()
                 .AddControllersAsServices()
