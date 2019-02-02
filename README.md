@@ -1,23 +1,4 @@
-# NetCoreMediatrSample
-Sample using Command and Query Responsibility Segregation (CQRS) implemented in .NET Core by using MediatR and using background workers, real-time metrics and monitoring, logging, validations and more
-
-Some of the  dependencies are:
- - App.Metrics: Real time metrics and monitoring set up with InfluxDb and Grafana.
- - AutoFixture: Auto generate test objects.
- - AutoMapper: Eliminate a lot of boilerplate by auto mapping objects (eg. request and response).
- - CorrelationId: Add Correlation ID to Http context to easier track errors.
- - FluentAssertions: Better and easier assertions in tests.
- - FluentValidation: Validating requests before they are handled.
- - Hangfire: Background worker.
- - Identityserver4: OpenID Connect and OAuth 2.0 framework.
- - MediatR: Dispatching request/response, commands, queries, notifications and events.
- - Microsoft.EntityFrameworkCore: Object-relational mapping.
- - Microsoft.Extensions.Logging: Logging API that allow other providers.
- - Moq: Mocking framework used for testing.
- - StructureMap: IoC Container.
- - Xunit: Testing framework.
-
- Running on .NET Core 2.1 (2.1.5+)
+Running on .NET Core 2.2
  
  ## Structure
   - API: Source of the application.
@@ -44,8 +25,7 @@ Real time metrics require Grafana and InfluxDb.
  2. Download Grafana dashboard [here](https://grafana.com/dashboards/2125).
  
 ## Logging
-Logging is set up with Microsoft.Extensions.Logging which means you can add logging providers by your self to it.
-As now it is set up as follow:
+Logging is set up with Microsoft.Extensions.Logging:
  - Status codes 5xx, that are caused by an exception, are logged as critical.
  - Other status codes, that are caused by an exception, are logged as warning.
  - The whole pipeline (request to response) is logged as information.
@@ -54,6 +34,8 @@ Critical and warning logs are named `<endpoint> :: [<status code>] <exception me
 
 The user receives error message and correlation id in production. For development environment the whole 
 exception is also included.
+
+Sentry.io logging provider has been added to the project.
 
 ## Build and run with Docker
 ```
